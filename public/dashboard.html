@@ -25,10 +25,19 @@
 .sw{width:36px;height:36px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
 .sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
 input[type=color]{width:44px;height:40px;border:0;background:none;padding:0;cursor:pointer}
-.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
-.slot{display:grid;gap:6px;font-size:13px;font-weight:800;color:var(--muted)}
-.slot img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;border:2px solid var(--line);background:var(--green-l)}
-.slot input{font-size:12px;max-width:100%}
+.slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.slot{display:grid;gap:8px;align-content:start;min-width:0;font-size:13px;font-weight:800;color:var(--muted)}
+.slot img{width:100%;max-width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;border:2px solid var(--line);background:var(--green-l);display:block}
+.slot-file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.slot-btns{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.linkbtn{background:none;border:0;padding:4px 0;font:700 13px var(--body);color:var(--muted);text-decoration:underline;cursor:pointer}
+.modal{position:fixed;inset:0;background:rgba(17,40,28,.6);display:grid;place-items:center;padding:16px;z-index:50}
+.modal-box{background:#fff;border-radius:20px;padding:20px;width:min(100%,440px);display:grid;gap:12px;max-height:100%;overflow:auto}
+.modal-box h2{font-size:22px}
+#cropCanvas{width:100%;max-width:100%;aspect-ratio:4/5;border-radius:12px;cursor:grab;touch-action:none;background:var(--green-l);display:block}
+#cropCanvas:active{cursor:grabbing}
+.zoomrow{display:flex;gap:10px;align-items:center;font-weight:800;font-size:13px;color:var(--muted)}
+.zoomrow input{flex:1;accent-color:var(--red)}
 .dayrow{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;padding-bottom:8px;border-bottom:1px dashed var(--line)}
 .dayrow .field:nth-child(3){grid-column:1/3}
 .dayrow .field{font-size:14px;padding:9px 10px}
@@ -216,6 +225,16 @@ input[type=color]{width:44px;height:40px;border:0;background:none;padding:0;curs
       <div id="mkRoot"></div>
     </section>
   </main>
+
+  <div class="modal" id="cropModal" hidden role="dialog" aria-modal="true" aria-labelledby="cropTitle">
+    <div class="modal-box">
+      <h2 id="cropTitle">Crop and resize</h2>
+      <p class="fine" style="margin:0">Drag the photo to move it. Use the slider to zoom in. Keep Santa's face near the top.</p>
+      <canvas id="cropCanvas" width="480" height="600"></canvas>
+      <label class="zoomrow" for="cropZoom">Zoom <input type="range" id="cropZoom" min="1" max="4" step="0.01" value="1"></label>
+      <div class="linkbox"><button class="btn red" type="button" id="cropSave">Use this crop</button><button class="btn ghost" type="button" id="cropCancel">Cancel</button></div>
+    </div>
+  </div>
 
   <footer>A Little Holiday Magic · <a href="/privacy">Privacy</a></footer>
 </div>
