@@ -17,7 +17,7 @@ $("loginForm").addEventListener("submit", async e => {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { $("loginErr").textContent = "Please enter a valid email."; $("loginErr").hidden = false; return; }
   $("loginBtn").disabled = true;
   // Works for new and existing accounts alike: no "already registered" errors.
-  const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: `${SITE}/dashboard` } });
+  const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: true, emailRedirectTo: `${location.origin}/dashboard` } });
   $("loginBtn").disabled = false;
   if (error) { $("loginErr").textContent = error.status === 429 ? "Too many tries. Wait a minute, then try again." : "We couldn't send the link. Please try again."; $("loginErr").hidden = false; }
   else $("loginOk").hidden = false;
@@ -26,7 +26,17 @@ const signOut = async () => { await sb.auth.signOut(); location.href = "/dashboa
 $("signOut").onclick = signOut; $("noneOut").onclick = signOut;
 
 sb.auth.onAuthStateChange((_evt, session) => { if (session && !studio) boot(session); });
-sb.auth.getSession().then(({ data }) => data.session ? boot(data.session) : show("vLogin"));
+// If the sign-in link failed (expired, already used), say so on the sign-in screen.
+function linkError() {
+  const q = new URLSearchParams(location.hash.slice(1) + "&" + location.search.slice(1));
+  const d = q.get("error_description") || q.get("error");
+  if (!d) return;
+  history.replaceState(null, "", "/dashboard");
+  $("loginErr").textContent = /expired|invalid/i.test(d) ? "That sign-in link has expired or was already used. Enter your email to get a new one." : "Sign-in didn't work: " + d.replace(/\+/g, " ");
+  $("loginErr").hidden = false;
+}
+sb.auth.getSession().then(({ data }) => { if (data.session) boot(data.session); else { linkError(); show("vLogin"); } }).catch(() => show("vLogin"));
+setTimeout(() => { if (!$("vLoading").hidden) show("vLogin"); }, 8000);
 
 let booting = false;
 async function boot(session) {
