@@ -1,4 +1,5 @@
 import { DEFAULT_PHOTOS, NOTES, STOPS, RESERVED_SLUGS, santaLines } from "./content.js";
+import { initMarketing } from "./marketing.js";
 
 const $ = id => document.getElementById(id);
 const C = window.ALHM_CONFIG || {};
@@ -51,8 +52,8 @@ async function boot(session) {
 }
 
 // ---------- Tabs ----------
-const tabs = [["t-set", "p-set"], ["t-fam", "p-fam"], ["t-share", "p-share"]];
-tabs.forEach(([t]) => $(t).addEventListener("click", () => { tabs.forEach(([t2, p2]) => { $(t2).setAttribute("aria-selected", String(t2 === t)); $(p2).hidden = t2 !== t; }); if (t === "t-fam") loadFamilies(); }));
+const tabs = [["t-set", "p-set"], ["t-fam", "p-fam"], ["t-share", "p-share"], ["t-mkt", "p-mkt"]];
+tabs.forEach(([t]) => $(t).addEventListener("click", () => { tabs.forEach(([t2, p2]) => { $(t2).setAttribute("aria-selected", String(t2 === t)); $(p2).hidden = t2 !== t; }); if (t === "t-fam") loadFamilies(); if (t === "t-mkt") initMarketing(studio, SITE, $("mkRoot")); }));
 
 // ---------- Settings form ----------
 const COLORS = ["#c61f2e", "#1d6a44", "#b8862b", "#c0869a", "#3f63c4", "#2b2328"];
