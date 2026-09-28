@@ -1,0 +1,45 @@
+/* Shared styles for the sales page, dashboard, and privacy page */
+:root{
+  color-scheme: light;
+  --bg:#f6faf7; --card:#ffffff; --ink:#1c2a21; --muted:#5b6d61; --line:#dce7df;
+  --red:#c61f2e; --red-d:#9c1521; --red-l:#fde8ea; --green:#1d6a44; --green-d:#11452c; --green-l:#e6f2ea;
+  --gold:#e5b645; --paper:#fffdf9;
+  --display:"Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+img{max-width:100%}
+html,body{background:var(--bg)}
+body{margin:0;font-family:var(--body);color:var(--ink);font-size:16px;line-height:1.55;padding-inline:16px;padding-block:0 56px}
+a{color:var(--green)}
+.wrap{max-width:1080px;margin:0 auto}
+.narrow{max-width:760px;margin:0 auto}
+.stripe{height:10px;margin-inline:-16px;background:repeating-linear-gradient(135deg,var(--red) 0 14px,#fff 14px 28px,var(--green) 28px 42px,#fff 42px 56px)}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-block:16px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand img{width:40px;height:40px;border-radius:50%}
+.brand b{font-family:var(--display);font-size:20px;line-height:1}
+.top nav{margin-left:auto;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.top nav a{font-weight:800;text-decoration:none;color:var(--ink);font-size:15px}
+h1,h2,h3{font-family:var(--display);line-height:1.08;text-wrap:balance;margin:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin:0 0 8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:800 15px var(--body);background:var(--green);color:#fff;border:0;border-radius:14px;padding:12px 18px;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--green-d)}
+.btn.red{background:var(--red)}.btn.red:hover{background:var(--red-d)}
+.btn.ghost{background:transparent;color:var(--green-d);border:2px solid var(--green)}
+.btn.small{font-size:13px;padding:8px 12px;border-radius:10px}
+.btn:disabled{opacity:.6;cursor:default}
+.btn:focus-visible,.field:focus-visible,.tab:focus-visible,a:focus-visible,.sw:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px}
+.field{width:100%;font:600 16px var(--body);padding:11px 14px;border-radius:12px;border:2px solid var(--line);background:#fff;color:var(--ink)}
+textarea.field{min-height:100px;resize:vertical;line-height:1.45}
+label.lbl{display:grid;gap:6px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.check{display:flex;gap:10px;align-items:center;font-weight:700}
+.check input{width:20px;height:20px;accent-color:var(--green)}
+.ok{color:var(--green);font-weight:800;font-size:14px}
+.err{color:var(--red);font-weight:800;font-size:14px}
+.muted{color:var(--muted)}
+.fine{font-size:13px;color:var(--muted)}
+footer{margin-top:56px;text-align:center;font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}

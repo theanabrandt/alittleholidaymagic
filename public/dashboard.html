@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio Dashboard · A Little Holiday Magic</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/site.css">
+<style>
+.hello{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between;margin:20px 0 16px}
+.hello h1{font-size:34px}
+.tabs{display:flex;gap:6px;border-bottom:2px solid var(--line);margin-bottom:20px;overflow-x:auto}
+.tab{font:800 15px var(--body);background:none;border:0;padding:12px 14px;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--red);border-bottom-color:var(--red)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px;align-items:start}
+.sec{display:grid;gap:14px}
+.sec h2{font-size:22px}
+.sec p.help{margin:-6px 0 0;font-size:14px;color:var(--muted)}
+.swatches{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sw{width:36px;height:36px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+input[type=color]{width:44px;height:40px;border:0;background:none;padding:0;cursor:pointer}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.slot{display:grid;gap:6px;font-size:13px;font-weight:800;color:var(--muted)}
+.slot img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:12px;border:2px solid var(--line);background:var(--green-l)}
+.slot input{font-size:12px;max-width:100%}
+.dayrow{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.dayrow .field:nth-child(3){grid-column:1/3}
+.dayrow .field{font-size:14px;padding:9px 10px}
+.x{border:0;background:var(--red-l);color:var(--red);font:800 16px var(--body);border-radius:10px;width:38px;height:38px;cursor:pointer}
+
+.savebar{position:sticky;bottom:0;background:var(--bg);padding-block:12px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center;border-top:1px solid var(--line);margin-top:20px;z-index:2}
+.slugrow{display:flex;align-items:center;gap:0;border:2px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
+.slugrow span{padding:11px 0 11px 14px;color:var(--muted);font-weight:700;white-space:nowrap;font-size:15px}
+.slugrow input{border:0;flex:1;min-width:0;font:700 16px var(--body);padding:11px 14px 11px 2px;outline:none}
+.fam{border:1px solid var(--line);border-radius:16px;background:#fff}
+.fam summary{list-style:none;display:flex;gap:12px;align-items:center;padding:14px 16px;cursor:pointer;flex-wrap:wrap}
+.fam summary::-webkit-details-marker{display:none}
+.fam summary b{font-family:var(--display);font-size:20px}
+.pill{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:99px;background:var(--green-l);color:var(--green-d)}
+.pill.red{background:var(--red-l);color:var(--red)}
+.fam .body{padding:0 16px 16px;display:grid;gap:10px}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;margin:0}
+.facts dt{font-weight:800;color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding-top:2px}
+.facts dd{margin:0;font-weight:700}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 16px;min-width:150px}
+.stat b{display:block;font-family:var(--display);font-size:30px;line-height:1;font-variant-numeric:tabular-nums;color:var(--red)}
+.stat span{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.linkbox{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.linkbox code{flex:1;min-width:0;background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;overflow-wrap:anywhere}
+.center{min-height:60vh;display:grid;place-items:center}
+.login{max-width:440px;width:100%;display:grid;gap:14px}
+</style>
+</head>
+<body>
+<div class="stripe" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/"><img src="/icon-512.png" alt=""><b>A Little Holiday Magic</b></a>
+    <nav><a href="/demo" target="_blank" rel="noopener">See the demo</a><button class="btn ghost small" id="signOut" hidden>Sign out</button></nav>
+  </header>
+
+  <!-- Loading -->
+  <div class="center" id="vLoading"><p class="muted">Loading your studio…</p></div>
+
+  <!-- Sign in -->
+  <div class="center" id="vLogin" hidden>
+    <form class="card login" id="loginForm">
+      <p class="eyebrow">Studio dashboard</p>
+      <h1 style="font-size:32px">Sign in</h1>
+      <p class="muted" style="margin:0">Use the email you bought with. We'll send you a sign-in link, so there's no password to remember.</p>
+      <label class="lbl" for="loginEmail">Email<input class="field" id="loginEmail" type="email" required autocomplete="email"></label>
+      <button class="btn red" type="submit" id="loginBtn">Email me a sign-in link</button>
+      <span class="ok" id="loginOk" hidden>Check your inbox for the sign-in link. It can take a minute, and sometimes lands in spam.</span>
+      <span class="err" id="loginErr" hidden></span>
+      <p class="fine" style="margin:0">Don't have access yet? <a href="/#pricing">Get your Santa page</a>.</p>
+    </form>
+  </div>
+
+  <!-- No purchase -->
+  <div class="center" id="vNone" hidden>
+    <div class="card login">
+      <h1 style="font-size:28px">We can't find a purchase for <span id="noneEmail"></span></h1>
+      <p class="muted" style="margin:0">Sign in with the email you used at checkout. If you just bought, give it a minute and refresh.</p>
+      <a class="btn red" href="/#pricing">Get your Santa page</a>
+      <button class="btn ghost" id="noneOut" type="button">Use a different email</button>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <main id="vDash" hidden>
+    <div class="hello">
+      <div><p class="eyebrow" id="helloEyebrow">Your Santa page</p><h1 id="helloName">Your studio</h1></div>
+      <a class="btn red" id="viewPage" href="#" target="_blank" rel="noopener">View my Santa page</a>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="t-set" aria-selected="true" aria-controls="p-set">Settings</button>
+      <button class="tab" role="tab" id="t-fam" aria-selected="false" aria-controls="p-fam">Families</button>
+      <button class="tab" role="tab" id="t-share" aria-selected="false" aria-controls="p-share">Share</button>
+    </div>
+
+    <!-- SETTINGS -->
+    <section id="p-set" role="tabpanel" aria-labelledby="t-set">
+      <form id="setForm" novalidate>
+        <div class="grid2">
+          <div class="card sec">
+            <h2>Your studio</h2>
+            <label class="lbl" for="fSlug">Your page link
+              <div class="slugrow"><span>alittleholidaymagic.com/</span><input id="fSlug" maxlength="40" autocomplete="off" spellcheck="false" placeholder="yourstudio"></div>
+            </label>
+            <p class="help">Lowercase letters, numbers, and dashes. Changing it later breaks links you've already shared.</p>
+            <label class="lbl" for="fName">Studio name<input class="field" id="fName" maxlength="60" required></label>
+            <label class="lbl" for="fTag">Tagline<input class="field" id="fTag" maxlength="70"></label>
+            <label class="lbl">Brand color
+              <div class="swatches" id="swatches"><input type="color" id="fColor" aria-label="Custom color"></div>
+            </label>
+            <label class="lbl" for="fNotify">Send Santa's cheat sheets to<input class="field" id="fNotify" type="email"></label>
+          </div>
+
+          <div class="card sec">
+            <h2>Your Santa photos</h2>
+            <p class="help">Use photos of your own Santa, or keep the cartoon Santa. Portrait photos work best.</p>
+            <div class="slots" id="slots"></div>
+            <span class="err" id="photoErr" hidden></span>
+          </div>
+
+          <div class="card sec">
+            <h2>Santa session days</h2>
+            <p class="help">Each day shows on your page with its own Book button. Families you send a day's special link to are greeted by Santa as booked.</p>
+            <div id="dayRows" style="display:grid;gap:8px"></div>
+            <button class="btn ghost small" id="addDay" type="button" style="justify-self:start">Add a day</button>
+          </div>
+
+          <div class="card sec">
+            <h2>Toy drive</h2>
+            <label class="check" for="fToy"><input type="checkbox" id="fToy"> Run a toy drive this year</label>
+            <label class="lbl" for="fCharity">Who the toys go to<input class="field" id="fCharity" maxlength="80"></label>
+            <label class="lbl" for="fBonus">Bonus for families who bring a toy<input class="field" id="fBonus" maxlength="120"></label>
+          </div>
+
+          <div class="card sec">
+            <h2>Santa's daily notes</h2>
+            <p class="help">Families who sign up get one note each morning, December 1 to 24. Keep Santa's, or write your own for any day. Type {name} for the child's name.</p>
+            <label class="lbl" for="fNoteDay">Day<select class="field" id="fNoteDay"></select></label>
+            <label class="lbl" for="fNoteText">Note<textarea class="field" id="fNoteText" maxlength="400"></textarea></label>
+            <div class="linkbox"><button class="btn small" type="button" id="useMine">Use my note for this day</button><button class="btn ghost small" type="button" id="useSanta">Use Santa's note</button></div>
+            <p class="fine" id="customDays" style="margin:0"></p>
+          </div>
+
+          <div class="card sec">
+            <h2>Tracker and gifts</h2>
+            <label class="lbl" for="fTown">Your town on the Santa Tracker<select class="field" id="fTown"></select></label>
+            <p class="help">Pick the closest city. Santa makes a stop there on Christmas Eve, labeled with your studio's name.</p>
+            <label class="lbl" for="fPick">Studio gift pick (top of the gift ideas)<input class="field" id="fPick" maxlength="120" placeholder="A Santa session gift card from our studio"></label>
+          </div>
+        </div>
+        <div class="savebar">
+          <button class="btn red" type="submit" id="saveBtn">Save changes</button>
+          <span class="ok" id="saveOk" hidden>Saved. Your page is updated.</span>
+          <span class="err" id="saveErr" hidden></span>
+        </div>
+      </form>
+    </section>
+
+    <!-- FAMILIES -->
+    <section id="p-fam" role="tabpanel" aria-labelledby="t-fam" hidden>
+      <div class="stats">
+        <div class="stat"><b id="sFam">0</b><span>Families</span></div>
+        <div class="stat"><b id="sDaily">0</b><span>Getting daily notes</span></div>
+        <div class="stat"><b id="sToy">0</b><span>Bringing a toy</span></div>
+      </div>
+      <div class="linkbox" style="margin-bottom:14px"><button class="btn ghost small" id="exportCsv" type="button">Download families (CSV)</button><button class="btn ghost small" id="refreshFam" type="button">Refresh</button></div>
+      <div id="famList" style="display:grid;gap:10px"></div>
+    </section>
+
+    <!-- SHARE -->
+    <section id="p-share" role="tabpanel" aria-labelledby="t-share" hidden>
+      <div class="grid2">
+        <div class="card sec">
+          <h2>Your page link</h2>
+          <p class="help">Send this to every family on your list.</p>
+          <div class="linkbox"><code id="mainLink"></code><button class="btn small" type="button" data-copy="mainLink">Copy</button></div>
+          <h2 style="margin-top:8px">Links for booked families</h2>
+          <p class="help">Send the matching link to families booked on that day. Santa will tell their child, "I heard you're coming to visit me on…"</p>
+          <div id="dayLinks" style="display:grid;gap:10px"></div>
+        </div>
+        <div class="card sec">
+          <h2>A message you can send</h2>
+          <textarea class="field" id="shareMsg" style="min-height:220px"></textarea>
+          <div class="linkbox"><button class="btn small" type="button" data-copy="shareMsg">Copy message</button><span class="ok" id="copyOk" hidden>Copied</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>A Little Holiday Magic · <a href="/privacy">Privacy</a></footer>
+</div>
+
+<script src="/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script type="module" src="/js/dashboard.js"></script>
+</body>
+</html>
