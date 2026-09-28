@@ -249,7 +249,8 @@ footer{margin-top:40px;color:var(--muted);font-size:12px;text-align:center}
 @media (max-width:720px){.note-top{grid-template-columns:1fr}.note-top .art{max-height:280px;aspect-ratio:auto}.days.wide{grid-template-columns:repeat(8,minmax(0,1fr))}}
 .day.today{box-shadow:inset 0 0 0 2px var(--gold)}
 .toy{background:var(--red);color:#fff;border:0}
-.toy h3{color:#fff}.toy p{color:#ffe1e4}
+.toy h3{color:#fff}.toy p{color:#ffe1e4;white-space:pre-line}
+#toyPText{white-space:pre-line}
 .toy .badge{justify-self:start;background:#fff;color:var(--red);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:99px}
 .fear{margin-top:16px;background:var(--green-l);border-radius:18px;padding:16px 18px;max-width:760px}
 .fear b{font-family:var(--display);font-size:18px;color:var(--green-d);display:block}
@@ -359,7 +360,7 @@ select.field{font-size:14px}
     </article>
     <article class="card toy" id="toyKid" aria-label="Be one of Santa's helpers">
       <span class="badge">Santa's helper mission</span>
-      <h3>Bring a toy for another child</h3>
+      <h3 id="toyKidTitle">Bring a toy for another child</h3>
       <p id="toyKidText">Some children need a little extra Christmas magic this year. When you visit Santa, bring a new toy and you'll become one of his official elf helpers!</p>
     </article>
     <article class="card" aria-label="Nice-o-meter quiz">
@@ -439,8 +440,8 @@ select.field{font-size:14px}
       <ul class="sessions" id="sessions"></ul>
       <div class="divider"></div>
       <div id="toyParent">
-        <p class="eyebrow">Toy drive bonus</p>
-        <h3 id="toyPH" style="margin-bottom:6px">Bring a toy, get a bonus</h3>
+        <p class="eyebrow">For grown-ups</p>
+        <h3 id="toyPH" style="margin-bottom:6px">Toy drive</h3>
         <p id="toyPText"></p>
       </div>
     </div>

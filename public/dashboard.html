@@ -163,8 +163,13 @@ input[type=color]{width:44px;height:40px;border:0;background:none;padding:0;curs
           <div class="card sec">
             <h2>Toy drive</h2>
             <label class="check" for="fToy"><input type="checkbox" id="fToy"> Run a toy drive this year</label>
-            <label class="lbl" for="fCharity">Who the toys go to<input class="field" id="fCharity" maxlength="80"></label>
-            <label class="lbl" for="fBonus">Bonus for families who bring a toy<input class="field" id="fBonus" maxlength="120"></label>
+            <p class="help">Use it for toys, gift cards, food, or any cause. Every line below is yours to rewrite. Leave a box empty to use our wording.</p>
+            <label class="lbl" for="tItem">What families bring<input class="field" id="tItem" maxlength="80" placeholder="a new, unwrapped toy"></label>
+            <p class="help" style="margin-top:-8px">Santa asks booked kids: "Would you like to be one of my helpers and bring <b id="tItemEcho">a new, unwrapped toy</b> when you visit me?"</p>
+            <label class="lbl" for="tKidTitle">Kids' card: title<input class="field" id="tKidTitle" maxlength="70" placeholder="Bring a toy for another child"></label>
+            <label class="lbl" for="tKidText">Kids' card: message<textarea class="field" id="tKidText" maxlength="400" rows="3"></textarea></label>
+            <label class="lbl" for="tParentTitle">Grown-ups' card: title<input class="field" id="tParentTitle" maxlength="70" placeholder="Toy drive"></label>
+            <label class="lbl" for="tParentText">Grown-ups' card: details and bonus<textarea class="field" id="tParentText" maxlength="600" rows="4"></textarea></label>
           </div>
 
           <div class="card sec">
