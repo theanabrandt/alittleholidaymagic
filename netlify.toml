@@ -6,26 +6,17 @@
   node_bundler = "esbuild"
   external_node_modules = ["stripe"]
 
-# Pretty URLs
-[[redirects]]
-  from = "/dashboard"
-  to = "/dashboard.html"
-  status = 200
+# /dashboard and /privacy work on their own (Netlify serves dashboard.html and privacy.html).
 
 [[redirects]]
   from = "/demo"
-  to = "/santa.html"
-  status = 200
-
-[[redirects]]
-  from = "/privacy"
-  to = "/privacy.html"
+  to = "/santa"
   status = 200
 
 # Every studio page: alittleholidaymagic.com/studio-name
 [[redirects]]
   from = "/:slug"
-  to = "/santa.html"
+  to = "/santa"
   status = 200
 
 [[headers]]
