@@ -60,7 +60,21 @@ export const NOTES = [
 export const VISIT_NOTE = "{name}, today's the day you come visit me! I'll be waiting in my big chair, and I already know all about you. Ho ho ho!";
 
 export const fillName = (t, name) => String(t || "").replace(/\{name\}/gi, name || "friend");
-export const decDate = d => { const m = /December\s+(\d{1,2})/i.exec(d || ""); return m ? +m[1] : null; };
+export const decDate = d => { const m = /\bDec(?:ember)?\.?\s+(\d{1,2})\b/i.exec(d || ""); return m ? +m[1] : null; };
+
+// Toy drive wording. Studios can rewrite every line; blanks fall back to these.
+export function toyText(S) {
+  const t = (S && S.toy) || {};
+  const item = (t.item || "").trim() || "a new, unwrapped toy";
+  const oldParent = S && (S.charity || S.bonus) ? `Bring ${item} to your Santa session. It goes to ${S.charity || "a local toy drive"}. ${S.bonus || ""}`.trim() : "";
+  return {
+    item,
+    kidTitle: (t.kid_title || "").trim() || "Bring a toy for another child",
+    kidText: (t.kid_text || "").trim() || "Some children need a little extra Christmas magic this year. When you visit Santa, bring a new toy and you'll become one of his official elf helpers!",
+    parentTitle: (t.parent_title || "").trim() || "Toy drive",
+    parentText: (t.parent_text || "").trim() || oldParent || `Bring ${item} to your Santa session.`
+  };
+}
 
 // The note for a given December day. Studio overrides win, then the visit-day note, then Santa's default.
 export function noteFor(studio, day, name, visitDate) {
@@ -124,7 +138,7 @@ export const STOPS = [
 // Lines for Santa to say at the session, built from the chat answers.
 const herHim = r => ["Dancer", "Vixen", "Cupid"].includes(r) ? "her" : "him";
 const petPhrase = p => String(p || "").replace(/^(a|an|my)\s+/i, "your ");
-export function santaLines(k, toyOn) {
+export function santaLines(k, toyOn, item = "a toy") {
   const L = [
     `"${k.name}! I've been waiting for you. My elves gave you a gold star for ${k.deed}. That's why you're on the Nice List."`,
     `"I got your message about ${k.wish}. The elves are working very hard."`,
@@ -133,7 +147,7 @@ export function santaLines(k, toyOn) {
   ];
   if (k.pet && String(k.pet).toLowerCase() !== "no pets") L.push(`"And how is ${petPhrase(k.pet)}? Give them a pat from Santa."`);
   if (k.sibling && !["just me", "more than one!"].includes(k.sibling)) L.push(`"Are you being a good helper to your ${String(k.sibling).replace(/^an?\s+/, "")}?"`);
-  if (toyOn && k.helper === "Yes") L.push(`"Thank you for bringing a toy for another child. You're one of my official elf helpers!"`);
+  if (toyOn && k.helper === "Yes") L.push(`"Thank you for bringing ${item}. You're one of my official elf helpers!"`);
   return L;
 }
 export { herHim, petPhrase };

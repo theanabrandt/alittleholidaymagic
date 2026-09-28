@@ -1,4 +1,4 @@
-import { DEFAULT_PHOTOS, NOTES, STOPS, RESERVED_SLUGS, santaLines } from "./content.js";
+import { DEFAULT_PHOTOS, NOTES, STOPS, RESERVED_SLUGS, santaLines, toyText } from "./content.js";
 import { initMarketing } from "./marketing.js";
 
 const $ = id => document.getElementById(id);
@@ -62,7 +62,11 @@ function fillForm() {
   draft = JSON.parse(JSON.stringify({ days: studio.days || [], notes: studio.notes || {}, photos: studio.photos || {}, color: studio.color || "#c61f2e" }));
   $("fSlug").value = studio.slug || ""; $("fName").value = studio.name || ""; $("fTag").value = studio.tagline || "";
   $("fNotify").value = studio.notify_email || studio.owner_email; $("fToy").checked = !!studio.toy_on;
-  $("fCharity").value = studio.charity || ""; $("fBonus").value = studio.bonus || ""; $("fPick").value = studio.gift_pick || "";
+  $("fPick").value = studio.gift_pick || "";
+  { const t = studio.toy || {}, TT = toyText(studio);
+    $("tItem").value = t.item || ""; $("tKidTitle").value = t.kid_title || ""; $("tParentTitle").value = t.parent_title || "";
+    $("tKidText").value = t.kid_text || TT.kidText; $("tParentText").value = t.parent_text || TT.parentText;
+    $("tItemEcho").textContent = TT.item; $("tItem").oninput = () => { $("tItemEcho").textContent = $("tItem").value.trim() || "a new, unwrapped toy"; }; }
   // colors
   const sw = $("swatches"); sw.querySelectorAll(".sw").forEach(n => n.remove());
   COLORS.forEach(c => { const b = document.createElement("button"); b.type = "button"; b.className = "sw"; b.style.background = c; b.setAttribute("aria-label", "Color " + c); b.onclick = () => { draft.color = c; $("fColor").value = c; paintSwatches(); }; sw.insertBefore(b, $("fColor")); });
@@ -200,8 +204,9 @@ $("setForm").addEventListener("submit", async e => {
   if (noteText && noteText !== NOTES[nd - 1] && noteText !== draft.notes[nd]) draft.notes[nd] = noteText;
   const update = {
     slug, name: $("fName").value.trim(), tagline: $("fTag").value.trim(), color: draft.color,
-    notify_email: $("fNotify").value.trim() || null, toy_on: $("fToy").checked, charity: $("fCharity").value.trim(),
-    bonus: $("fBonus").value.trim(), gift_pick: $("fPick").value.trim() || null, town: $("fTown").value,
+    notify_email: $("fNotify").value.trim() || null, toy_on: $("fToy").checked,
+    toy: { item: $("tItem").value.trim(), kid_title: $("tKidTitle").value.trim(), kid_text: $("tKidText").value.trim(), parent_title: $("tParentTitle").value.trim(), parent_text: $("tParentText").value.trim() },
+    gift_pick: $("fPick").value.trim() || null, town: $("fTown").value,
     days, notes: draft.notes, photos: draft.photos
   };
   $("saveBtn").disabled = true;
@@ -241,7 +246,7 @@ async function loadFamilies() {
     body.appendChild(dl);
     if (f.share_with_studio && a.deed) {
       const h = document.createElement("p"); h.className = "eyebrow"; h.style.margin = "6px 0 0"; h.style.color = "var(--red)"; h.textContent = "Lines for Santa to say"; body.appendChild(h);
-      const ol = document.createElement("ol"); ol.style.margin = "0"; santaLines({ name: f.child_name, ...a }, studio.toy_on).forEach(l => { const li = document.createElement("li"); li.textContent = l; ol.appendChild(li); }); body.appendChild(ol);
+      const ol = document.createElement("ol"); ol.style.margin = "0"; santaLines({ name: f.child_name, ...a }, studio.toy_on, toyText(studio).item).forEach(l => { const li = document.createElement("li"); li.textContent = l; ol.appendChild(li); }); body.appendChild(ol);
     }
     d.appendChild(body); list.appendChild(d);
   });

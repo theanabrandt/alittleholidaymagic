@@ -1,4 +1,4 @@
-import { DEMO_STUDIO, DEFAULT_PHOTOS, NOTES, noteFor, decDate, RECIPES, COOKIE_KEY, QUIZ, QUIZ_FB, GIFTS, GIFTS_YEAR, STOPS, santaLines, herHim, petPhrase, RESERVED_SLUGS } from "./content.js";
+import { toyText, DEMO_STUDIO, DEFAULT_PHOTOS, NOTES, noteFor, decDate, RECIPES, COOKIE_KEY, QUIZ, QUIZ_FB, GIFTS, GIFTS_YEAR, STOPS, santaLines, herHim, petPhrase, RESERVED_SLUGS } from "./content.js";
 
 const $ = id => document.getElementById(id);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -57,7 +57,9 @@ function start(S) {
   });
   $("tFace").setAttribute("href", customWave ? P("wave") : DEFAULT_PHOTOS.avatar);
   $("toyKid").hidden = !S.toy_on; $("toyParent").hidden = !S.toy_on;
-  $("toyPText").textContent = `Bring a new, unwrapped toy to your Santa session. It goes to ${S.charity || "a local toy drive"}. ${S.bonus || ""}`.trim();
+  const TT = toyText(S);
+  $("toyKidTitle").textContent = TT.kidTitle; $("toyKidText").textContent = TT.kidText;
+  $("toyPH").textContent = TT.parentTitle; $("toyPText").textContent = TT.parentText;
   $("cShareText").textContent = `Share my child's answers with ${studioName} so Santa knows them at our visit`;
 
   const sl = $("sessions"); sl.innerHTML = "";
@@ -132,7 +134,7 @@ function start(S) {
       await santaSays([n ? `What a wonderful list! That's ${n + 1} wishes. My fastest elf is carrying your page to the workshop right now.` : "One big wish! My fastest elf is carrying your page to the workshop right now."]);
       if (bookedDay) await santaSays([`And guess what, ${kid.name}? I heard you're coming to visit me on ${bookedDay.date}!`, "I'll be the one in the big red suit, and I already know all about you. Wave when you see me!"]);
       if (S.toy_on && bookedDay) {
-        await santaSays(["Can I tell you a secret? Some children need a little extra Christmas magic this year.", "Would you like to be one of my helpers and bring a new toy for another child when you visit me?"]);
+        await santaSays(["Can I tell you a secret? My elves and I are helping others this Christmas.", `Would you like to be one of my helpers and bring ${TT.item} when you visit me?`]);
         showButtons(["Yes, I'll help!", "I'll ask my grown-ups"], async o => { kid.helper = o.startsWith("Yes") ? "Yes" : "Asking"; await santaSays([kid.helper === "Yes" ? "Ho ho ho! You're officially one of Santa's elf helpers!" : "That's a great idea. Helpers always check with their grown-ups first!"]); finish(); });
       } else finish();
     }

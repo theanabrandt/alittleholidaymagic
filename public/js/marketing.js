@@ -1,5 +1,5 @@
 // Marketing kit: branded graphics + ready-to-send words, built from the studio's settings.
-import { DEFAULT_PHOTOS } from "./content.js";
+import { DEFAULT_PHOTOS, toyText } from "./content.js";
 
 const GREEN = "#11452c", PINK = "#ffd3d7", CREAM = "#fffdf9", GOLD = "#e5b645", INK = "#1c2a21", MUTED = "#5b6d61";
 const DISPLAY = '"Baloo 2", "Trebuchet MS", sans-serif', BODY = 'Nunito, "Segoe UI", sans-serif';
@@ -191,16 +191,16 @@ T.push({ id: "days", group: "Santa sessions", title: "Santa session days", size:
     footer(ctx, W, H); },
   caption: () => { const days = (S.days || []).filter(d => d.date).map(d => `🎄 ${d.date}${d.time ? " · " + d.time : ""}`).join("\n"); return `Santa is coming to ${S.name}! 🎅\n\n${days}\n\nBooked families get a special link so their child can chat with Santa before the big day. Book your spot at the link in our bio.`; } });
 
-T.push({ id: "toy", group: "Santa sessions", title: "Toy drive", size: [1080, 1350], needs: "toy", note: "Invite families to bring a toy.",
-  draw(ctx, W, H) { background(ctx, W, H);
+T.push({ id: "toy", group: "Santa sessions", title: "Toy drive", size: [1080, 1350], needs: "toy", note: "Uses the toy drive wording from your Settings.",
+  draw(ctx, W, H) { background(ctx, W, H); const TT = toyText(S);
     let y = pill(ctx, "Santa's helper mission", P, 100);
-    y = text(ctx, "Help Santa bring *magic* to another child", P, y + 30, { size: 96, maxW: W - P * 2, lh: 1 });
-    card(ctx, P, y + 60, W - P * 2, S.bonus ? 360 : 290, -1.5, "#ffffff");
-    let yy = text(ctx, "Bring a new, unwrapped toy to your Santa session.", P + 50, y + 110, { size: 50, color: INK, maxW: W - P * 2 - 100, lh: 1.05 });
-    yy = text(ctx, `Every toy goes to ${S.charity || "a local toy drive"}.`, P + 50, yy + 20, { size: 34, weight: 700, fam: BODY, color: MUTED, maxW: W - P * 2 - 100, lh: 1.3 });
-    if (S.bonus) text(ctx, S.bonus, P + 50, yy + 24, { size: 36, weight: 800, fam: BODY, color: RED, maxW: W - P * 2 - 100, lh: 1.3 });
+    y = text(ctx, TT.kidTitle, P, y + 30, { size: 92, maxW: W - P * 2, lh: 1 });
+    const probe = document.createElement("canvas").getContext("2d");
+    const endY = text(probe, TT.parentText, P + 50, 0, { size: 38, weight: 800, fam: BODY, maxW: W - P * 2 - 100, lh: 1.3 });
+    card(ctx, P, y + 60, W - P * 2, Math.min(560, endY + 110), -1.5, "#ffffff");
+    text(ctx, TT.parentText, P + 50, y + 115, { size: 38, weight: 800, fam: BODY, color: INK, maxW: W - P * 2 - 100, lh: 1.3 });
     footer(ctx, W, H); },
-  caption: () => `🎁 Be one of Santa's helpers!\n\nBring a new, unwrapped toy to your Santa session and we'll make sure it reaches ${S.charity || "a local toy drive"}. ${S.bonus || ""}\n\nLittle helpers make the biggest magic. 💚` });
+  caption: () => { const TT = toyText(S); return `🎁 Be one of Santa's helpers!\n\n${TT.parentText}\n\nLittle helpers make the biggest magic. 💚`; } });
 
 T.push({ id: "tracker", group: "Christmas Eve", title: "Track Santa tonight", size: [1080, 1920], note: "Post on December 24.",
   draw(ctx, W, H) { background(ctx, W, H);
