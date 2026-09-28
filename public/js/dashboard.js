@@ -3,7 +3,7 @@ import { DEFAULT_PHOTOS, NOTES, STOPS, RESERVED_SLUGS, santaLines } from "./cont
 const $ = id => document.getElementById(id);
 const C = window.ALHM_CONFIG || {};
 const SITE = (C.SITE_URL || location.origin).replace(/\/+$/, "");
-const sb = window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY, { auth: { persistSession: true, detectSessionInUrl: true, flowType: "pkce" } });
+const sb = window.supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY, { auth: { persistSession: true, detectSessionInUrl: true, flowType: "implicit" } });
 
 const views = ["vLoading", "vLogin", "vNone", "vDash"];
 const show = v => views.forEach(x => $(x).hidden = x !== v);
