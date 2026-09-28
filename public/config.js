@@ -3,8 +3,8 @@ window.ALHM_CONFIG = {
   SITE_URL: "https://alittleholidaymagic.com",
 
   // Supabase → Project Settings → API
-  SUPABASE_URL: "https://YOUR-PROJECT-ID.supabase.co",
-  SUPABASE_ANON_KEY: "YOUR-ANON-PUBLIC-KEY",
+  SUPABASE_URL: "https://vbswhhvehogqwemriniv.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_P0FtG0cMGokc5OhPb51qnA_d6uP3FKW",
 
   // Stripe Payment Links (Stripe → Payment Links → copy link)
   STRIPE_LINK_LAUNCH: "https://buy.stripe.com/YOUR-74-LINK",   // $74 lifetime, first 24 hours
