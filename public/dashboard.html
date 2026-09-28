@@ -56,6 +56,18 @@ input[type=color]{width:44px;height:40px;border:0;background:none;padding:0;curs
 .linkbox code{flex:1;min-width:0;background:#fff;border:2px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;overflow-wrap:anywhere}
 .center{min-height:60vh;display:grid;place-items:center}
 .login{max-width:440px;width:100%;display:grid;gap:14px}
+.mk-intro h2{font-size:28px}.mk-intro p{margin:6px 0 0;max-width:70ch}
+.mk-group{font-size:24px;margin:34px 0 14px;padding-top:18px;border-top:2px dashed var(--line)}
+.mk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:18px;align-items:start}
+.mk-card{display:grid;gap:10px;padding:16px}
+.mk-prev{background:var(--green-l);border-radius:12px;padding:10px;display:grid;place-items:center}
+.mk-canvas{width:100%;height:auto;max-height:420px;object-fit:contain;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.15)}
+.mk-slides{grid-auto-flow:column;grid-auto-columns:72%;overflow-x:auto;place-items:start;gap:10px;scroll-snap-type:x mandatory}
+.mk-slides .mk-canvas{scroll-snap-align:start}
+.mk-title{font-family:var(--display);font-size:20px;line-height:1.1}
+.mk-cap{font-size:14px;min-height:0}
+.mk-ideas{display:grid;gap:10px;padding-left:22px}
+.mk-ideas li b{display:block}.mk-ideas li span{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -104,6 +116,7 @@ input[type=color]{width:44px;height:40px;border:0;background:none;padding:0;curs
       <button class="tab" role="tab" id="t-set" aria-selected="true" aria-controls="p-set">Settings</button>
       <button class="tab" role="tab" id="t-fam" aria-selected="false" aria-controls="p-fam">Families</button>
       <button class="tab" role="tab" id="t-share" aria-selected="false" aria-controls="p-share">Share</button>
+      <button class="tab" role="tab" id="t-mkt" aria-selected="false" aria-controls="p-mkt">Marketing</button>
     </div>
 
     <!-- SETTINGS -->
@@ -198,6 +211,10 @@ input[type=color]{width:44px;height:40px;border:0;background:none;padding:0;curs
         </div>
       </div>
     </section>
+    <!-- MARKETING -->
+    <section id="p-mkt" role="tabpanel" aria-labelledby="t-mkt" hidden>
+      <div id="mkRoot"></div>
+    </section>
   </main>
 
   <footer>A Little Holiday Magic · <a href="/privacy">Privacy</a></footer>
@@ -205,6 +222,7 @@ input[type=color]{width:44px;height:40px;border:0;background:none;padding:0;curs
 
 <script src="/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script type="module" src="/js/dashboard.js"></script>
 </body>
 </html>
