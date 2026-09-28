@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How It Works · A Little Holiday Magic</title>
+<meta name="description" content="Step-by-step guide for photographers: set up your Santa page, share it, and use Santa's cheat sheets on session day.">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/css/site.css">
+<style>
+.intro{background:var(--green-d);color:#fff;border-radius:26px;padding:32px 28px;margin-top:8px}
+.intro h1{font-size:clamp(32px,5vw,48px)}
+.intro p{color:#d5eadd;font-size:18px;max-width:58ch;margin:12px 0 0}
+.path{list-style:none;padding:0;margin:22px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.path li{background:rgba(255,255,255,.12);border-radius:99px;padding:6px 14px;font-weight:800;font-size:14px}
+.path li b{color:#ffd3d7;margin-right:4px}
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:40px;margin-top:36px;align-items:start}
+@media (max-width:860px){.layout{grid-template-columns:1fr}.toc{display:none}}
+.toc{position:sticky;top:16px;display:grid;gap:4px;font-size:14px}
+.toc a{text-decoration:none;color:var(--muted);font-weight:700;padding:6px 10px;border-radius:10px}
+.toc a:hover{background:var(--green-l);color:var(--green-d)}
+.toc b{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);padding:0 10px 6px}
+.step{scroll-margin-top:16px;padding-bottom:40px;margin-bottom:40px;border-bottom:2px dashed var(--line)}
+.step:last-child{border-bottom:0}
+.num{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--red);color:#fff;font:800 20px var(--display);margin-bottom:10px}
+.step > h2{font-size:clamp(26px,3.6vw,34px)}
+.step > p.lead{font-size:18px;color:var(--muted);margin:8px 0 18px;max-width:62ch}
+.sub{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start;margin-top:22px}
+@media (max-width:760px){.sub{grid-template-columns:1fr}}
+.sub h3{font-size:21px;margin-bottom:6px}
+.sub ol,.sub ul,.step > ol,.step > ul{margin:8px 0 0;padding-left:22px;display:grid;gap:6px}
+.shot{width:100%;border-radius:16px;border:1px solid var(--line);box-shadow:0 10px 28px rgba(17,69,44,.10);display:block;background:#fff}
+.tip{background:var(--green-l);border-radius:14px;padding:12px 16px;margin-top:12px;font-size:15px}
+.tip b{color:var(--green-d)}
+.warn{background:var(--red-l);border-radius:14px;padding:12px 16px;margin-top:12px;font-size:15px}
+.warn b{color:var(--red-d)}
+code{background:#fff;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:.92em}
+.cal{display:grid;gap:10px;margin-top:14px}
+.cal div{display:grid;grid-template-columns:130px 1fr;gap:14px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.cal b{color:var(--red);font-family:var(--display);font-size:18px}
+@media (max-width:520px){.cal div{grid-template-columns:1fr;gap:2px}}
+.faq{display:grid;gap:10px;margin-top:14px}
+.faq details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.faq summary{font-weight:800;cursor:pointer}
+.faq p{margin:8px 0 0;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="stripe" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/"><img src="/icon-512.png" alt=""><b>A Little Holiday Magic</b></a>
+    <nav><a href="/demo">Demo</a><a class="btn small" href="/dashboard">Go to my dashboard</a></nav>
+  </header>
+
+  <div class="intro">
+    <p class="eyebrow" style="color:#ffd3d7">Photographer guide</p>
+    <h1>How it works, step by step</h1>
+    <p>Set up your Santa page in about 15 minutes. Follow the steps in order and you'll have a link ready to send to your families.</p>
+    <ol class="path">
+      <li><b>1</b>Sign in</li><li><b>2</b>Set up your page</li><li><b>3</b>Share it</li><li><b>4</b>What families see</li><li><b>5</b>Session day</li><li><b>6</b>December</li>
+    </ol>
+  </div>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Guide sections">
+      <b>On this page</b>
+      <a href="#signin">1. Sign in</a>
+      <a href="#setup">2. Set up your page</a>
+      <a href="#share">3. Share your link</a>
+      <a href="#families">4. What families see</a>
+      <a href="#session">5. Before each session</a>
+      <a href="#december">6. Your December calendar</a>
+      <a href="#help">Help and questions</a>
+    </nav>
+
+    <main>
+      <!-- 1 -->
+      <section class="step" id="signin">
+        <span class="num">1</span>
+        <h2>Sign in to your dashboard</h2>
+        <p class="lead">There's no password. We email you a sign-in link each time.</p>
+        <div class="sub">
+          <div>
+            <ol>
+              <li>Go to <a href="/dashboard"><b>alittleholidaymagic.com/dashboard</b></a></li>
+              <li>Type the <b>same email you used to buy</b>.</li>
+              <li>Click <b>Email me a sign-in link</b>.</li>
+              <li>Open the email from A Little Holiday Magic and click the link. You're in.</li>
+            </ol>
+            <div class="tip"><b>Tip:</b> Always click the <b>newest</b> email. Each new link cancels the one before it. If you don't see it within a minute, check your spam folder.</div>
+          </div>
+          <img class="shot" src="/img/guide/1-signin.jpg" alt="The dashboard sign-in box with an email field and a red Email me a sign-in link button" loading="lazy">
+        </div>
+      </section>
+
+      <!-- 2 -->
+      <section class="step" id="setup">
+        <span class="num">2</span>
+        <h2>Set up your Santa page</h2>
+        <p class="lead">Everything is on the <b>Settings</b> tab. Fill in each box, then click <b>Save changes</b> at the bottom. Nothing goes live until you save.</p>
+
+        <div class="sub">
+          <div>
+            <h3>a. Your studio</h3>
+            <ul>
+              <li><b>Your page link:</b> the end of your web address, like <code>yourstudio</code>. Use lowercase letters, numbers, and dashes. Pick carefully: changing it later breaks links you've already sent.</li>
+              <li><b>Studio name:</b> shows on the page, the letter, the certificate, and every email.</li>
+              <li><b>Tagline:</b> a short line under your name.</li>
+              <li><b>Brand color:</b> tap a circle, or the square to pick your exact color.</li>
+              <li><b>Send Santa's cheat sheets to:</b> the email where you want each child's answers to arrive.</li>
+            </ul>
+          </div>
+          <img class="shot" src="/img/guide/2-studio.jpg" alt="The Your studio section with page link, studio name, tagline, brand colors, and cheat sheet email" loading="lazy">
+        </div>
+
+        <div class="sub">
+          <div>
+            <h3>b. Your Santa photos</h3>
+            <p>Use photos of <b>your own Santa</b>, or keep the cartoon Santa. There are four spots:</p>
+            <ul>
+              <li><b>Waving:</b> the top of the page and Santa's chat photo. This one matters most.</li>
+              <li><b>Daily note:</b> beside Santa's note of the day.</li>
+              <li><b>Letter:</b> on top of Santa's letter.</li>
+              <li><b>Wish list, goodbye:</b> the wish list and the end of the chat.</li>
+            </ul>
+            <div class="tip"><b>Tip:</b> Portrait (tall) photos look best. For the Waving spot, keep Santa's face near the top, since it's also cropped into a small circle.</div>
+          </div>
+          <img class="shot" src="/img/guide/3-photos.jpg" alt="Four Santa photo spots, each with a Choose File button" loading="lazy">
+        </div>
+
+        <div class="sub">
+          <div>
+            <h3>c. Santa session days</h3>
+            <ol>
+              <li>Click <b>Add a day</b> for each day you're running Santa sessions.</li>
+              <li>First box: the day, written like <code>Saturday, December 5</code>.</li>
+              <li>Second box: the time and place, like <code>9am to 2pm · Main studio</code>.</li>
+              <li>Third box: your booking link. It must start with <code>https://</code>.</li>
+            </ol>
+            <div class="warn"><b>Important:</b> write the word <b>December</b> and the date number in the first box. That's how Santa knows which morning to send a booked child their "today's the day you visit me!" note.</div>
+          </div>
+          <img class="shot" src="/img/guide/4-days.jpg" alt="Two Santa session days, each with a date, time and place, and booking link" loading="lazy">
+        </div>
+
+        <div class="sub">
+          <div>
+            <h3>d. Toy drive (optional)</h3>
+            <ul>
+              <li>Tick <b>Run a toy drive this year</b> to turn it on.</li>
+              <li><b>Who the toys go to:</b> for example, your local hospital or a toy drive near you.</li>
+              <li><b>Bonus:</b> what families get for bringing a toy, like a bonus image.</li>
+            </ul>
+            <p>Kids see a "Santa's helper mission." Booked kids are asked by Santa himself. Parents see the bonus behind the grown-ups door.</p>
+          </div>
+          <img class="shot" src="/img/guide/5-toy.jpg" alt="The toy drive section with an on switch, charity name, and bonus" loading="lazy">
+        </div>
+
+        <div class="sub">
+          <div>
+            <h3>e. Santa's daily notes</h3>
+            <p>Families who sign up get a short note from Santa each morning, December 1 to 24. Santa's 24 notes are already written. To use your own for any day:</p>
+            <ol>
+              <li>Pick the day.</li>
+              <li>Write your note. Type <code>{name}</code> where the child's name should go.</li>
+              <li>Click <b>Use my note for this day</b>.</li>
+            </ol>
+            <div class="tip"><b>Idea:</b> use one day to remind families about your toy drive, or to say "Santa can't wait to see you this weekend!"</div>
+          </div>
+          <img class="shot" src="/img/guide/6-notes.jpg" alt="The daily notes editor with a day picker and a note box" loading="lazy">
+        </div>
+
+        <div class="sub">
+          <div>
+            <h3>f. Tracker and gifts</h3>
+            <ul>
+              <li><b>Your town on the Santa Tracker:</b> pick the closest city. On Christmas Eve, Santa stops there, labeled with your studio's name.</li>
+              <li><b>Studio gift pick:</b> shown at the top of the gift ideas parents see. A session gift card works well here.</li>
+            </ul>
+          </div>
+          <img class="shot" src="/img/guide/7-tracker.jpg" alt="The tracker town picker and the studio gift pick box" loading="lazy">
+        </div>
+
+        <div class="sub">
+          <div>
+            <h3>g. Save</h3>
+            <p>Click <b>Save changes</b> at the bottom. When you see <b>"Saved. Your page is updated."</b>, click <b>View my Santa page</b> at the top to see it live.</p>
+          </div>
+          <img class="shot" src="/img/guide/8-save.jpg" alt="The Save changes button with the Saved message" loading="lazy">
+        </div>
+      </section>
+
+      <!-- 3 -->
+      <section class="step" id="share">
+        <span class="num">3</span>
+        <h2>Share your link</h2>
+        <p class="lead">Open the <b>Share</b> tab. You'll find everything ready to copy.</p>
+        <div class="sub">
+          <div>
+            <ul>
+              <li><b>Your page link:</b> send it to every family. Put it in your newsletter, Instagram bio, Facebook, and texts.</li>
+              <li><b>Links for booked families:</b> each Santa day has its own link. Send it to the families booked that day. When their child chats, Santa says, "I heard you're coming to visit me on Saturday, December 5!"</li>
+              <li><b>A message you can send:</b> ready-to-paste wording for email or text. Edit it any way you like.</li>
+            </ul>
+            <div class="tip"><b>Best place for the booked link:</b> in your booking confirmation email, so every family gets it automatically.</div>
+          </div>
+          <img class="shot" src="/img/guide/9-share.jpg" alt="The Share tab with the main page link, links for each Santa day, and a message to copy" loading="lazy">
+        </div>
+      </section>
+
+      <!-- 4 -->
+      <section class="step" id="families">
+        <span class="num">4</span>
+        <h2>What families see</h2>
+        <p class="lead">Try it yourself: open your page and chat with Santa as a child would.</p>
+        <div class="sub">
+          <div>
+            <ol>
+              <li>The child chats with Santa by tapping answers: their name, age, a good deed, cookie, reindeer, pet, and wishes.</li>
+              <li>Santa writes back a letter, puts them on the Nice List, and leaves a cookie recipe.</li>
+              <li>A parent opens the <b>grown-ups door</b> by answering a simple math question, written out in words.</li>
+              <li>Behind the door, the parent sees the wish list, your Santa days, gift ideas, and one form. They can get the letter by email, sign up for daily notes, and share the answers with you.</li>
+            </ol>
+            <div class="tip"><b>The magic stays safe:</b> Santa never mentions parents or email. Nothing a child types is sent anywhere unless a parent fills in the grown-ups form.</div>
+          </div>
+          <div style="display:grid;gap:14px">
+            <img class="shot" src="/img/guide/11-chat.jpg" alt="Santa chatting with a child named Emma" loading="lazy">
+            <img class="shot" src="/img/guide/12-gate.jpg" alt="The grown-ups door with a written-out math question" loading="lazy">
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 -->
+      <section class="step" id="session">
+        <span class="num">5</span>
+        <h2>Before each Santa session</h2>
+        <p class="lead">This is where the magic happens for you. Santa greets each child like an old friend.</p>
+        <div class="sub">
+          <div>
+            <ol>
+              <li>Each time a parent shares their child's answers, a <b>cheat sheet</b> arrives in your email.</li>
+              <li>All of them are also on the <b>Families</b> tab. Click a child's name to open theirs.</li>
+              <li>Each one has <b>Lines for Santa to say</b>, like "Emma! My elves gave you a gold star for helping your little brother."</li>
+              <li>Before the session, go over that day's families with your Santa. The red tag next to each name shows their session day. Click <b>Download families (CSV)</b> for a list you can print.</li>
+            </ol>
+            <div class="tip"><b>Tip:</b> nervous little ones relax fast when Santa already knows their dog's name. That's when you get the real smiles.</div>
+          </div>
+          <img class="shot" src="/img/guide/10-families.jpg" alt="The Families tab with counts and a child's cheat sheet opened" loading="lazy">
+        </div>
+      </section>
+
+      <!-- 6 -->
+      <section class="step" id="december">
+        <span class="num">6</span>
+        <h2>Your December calendar</h2>
+        <p class="lead">A simple plan for the season.</p>
+        <div class="cal">
+          <div><b>November</b><span>Set up your page. Send your link to your whole list and post it on social.</span></div>
+          <div><b>At booking</b><span>Put the booked-day link in your confirmation email.</span></div>
+          <div><b>1 week before</b><span>Remind booked families to chat with Santa so he knows their child.</span></div>
+          <div><b>Dec 1 to 24</b><span>Santa's daily notes go out each morning to families who signed up, signed by your studio.</span></div>
+          <div><b>Session day</b><span>Check the Families tab. Give your Santa the cheat sheets.</span></div>
+          <div><b>Dec 24</b><span>Remind families to open your page and watch the Santa Tracker, with the stop in your town.</span></div>
+        </div>
+      </section>
+
+      <!-- Help -->
+      <section class="step" id="help">
+        <h2>Help and questions</h2>
+        <div class="faq">
+          <details><summary>My sign-in link doesn't work.</summary><p>Use the newest email only; each new link cancels older ones. Links also expire after about an hour. Go back to the dashboard and request a fresh one.</p></details>
+          <details><summary>It says it can't find my purchase.</summary><p>Sign in with the exact email you used at checkout. If you just bought, wait a minute and refresh. Still stuck? Email us and we'll connect it.</p></details>
+          <details><summary>I changed my photos but the page looks the same.</summary><p>After uploading, click <b>Save changes</b>. Then refresh your Santa page.</p></details>
+          <details><summary>A family says they didn't get their email.</summary><p>Ask them to check spam or promotions for "Santa's Helpers." They can send it again from the grown-ups door.</p></details>
+          <details><summary>Can I change my page link?</summary><p>Yes, in Settings. But links you've already sent will stop working, so choose one you'll keep.</p></details>
+          <details><summary>Do I need to do anything next year?</summary><p>No. Your access is lifetime. Update your Santa days and photos each fall and you're ready.</p></details>
+        </div>
+        <p style="margin-top:18px">Still need help? Email <a href="mailto:hello@alittleholidaymagic.com">hello@alittleholidaymagic.com</a>.</p>
+      </section>
+    </main>
+  </div>
+
+  <footer>A Little Holiday Magic · <a href="/dashboard">Dashboard</a> · <a href="/privacy">Privacy</a></footer>
+</div>
+</body>
+</html>
