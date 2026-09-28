@@ -25,10 +25,22 @@ export default async (req) => {
   }
   const slug = (params.get("slug") || "").toLowerCase().trim();
   if (!/^[a-z0-9-]{3,40}$/.test(slug) || RESERVED_SLUGS.includes(slug)) return json({ error: "Not found" }, 404);
-  const { data, error } = await db().from("studios").select(PUBLIC_COLS).eq("slug", slug).eq("status", "active").maybeSingle();
+  const { data, error } = await db().from("studios").select(PUBLIC_COLS + ", private, family_code").eq("slug", slug).eq("status", "active").maybeSingle();
   if (error) { console.error("studio lookup", error); return json({ error: "Server error" }, 500); }
   if (!data || !data.name) return json({ error: "Not found" }, 404);
   delete data.id;
+  const code = (data.family_code || "").trim().toLowerCase();
+  const locked = data.private && code;
+  delete data.family_code;
+  if (locked) {
+    const given = (params.get("code") || "").trim().toLowerCase();
+    if (given !== code) {
+      // Only what the "enter your family code" screen needs. Never the code itself.
+      return json({ locked: true, wrong: !!given, slug: data.slug, name: data.name, tagline: data.tagline, color: data.color,
+        photos: data.photos && data.photos.wave ? { wave: data.photos.wave } : {}, days: (data.days || []).map(d => ({ date: d.date, link: d.link })) }, 200, { "cache-control": "no-store" });
+    }
+    return json(data, 200, { "cache-control": "no-store" });
+  }
   return json(data, 200, { "cache-control": "public, max-age=60" });
 };
 export const config = { path: "/api/studio" };
