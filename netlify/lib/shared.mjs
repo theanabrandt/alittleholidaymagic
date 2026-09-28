@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { RECIPES, COOKIE_KEY, santaLines } from "../../public/js/content.js";
+import { RECIPES, COOKIE_KEY, santaLines, toyText } from "../../public/js/content.js";
 
 export const env = k => (typeof Netlify !== "undefined" && Netlify.env ? Netlify.env.get(k) : process.env[k]) || process.env[k];
 
@@ -12,7 +12,7 @@ export const json = (body, status = 200, headers = {}) =>
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 export const siteUrl = () => (env("SITE_URL") || "https://alittleholidaymagic.com").replace(/\/+$/, "");
-export const PUBLIC_COLS = "id, slug, name, tagline, color, town, toy_on, charity, bonus, gift_pick, days, notes, photos";
+export const PUBLIC_COLS = "id, slug, name, tagline, color, town, toy_on, charity, bonus, toy, gift_pick, days, notes, photos";
 
 // ---------- Email (Resend) ----------
 export async function sendEmail(msg) {
@@ -82,7 +82,7 @@ export function cheatSheetEmail(studio, sub) {
 <h1 style="margin:0 0 4px;font-size:30px">${esc(sub.child_name)}</h1>
 <p style="margin:0 0 16px;color:#5b6d61">${sub.visit_day ? `Santa session · ${esc(sub.visit_day)}` : "Not booked yet"} · Parent: ${esc(sub.parent_email)}</p>
 <table role="presentation" cellpadding="6" style="font-size:15px;border-collapse:collapse">${rows.map(([l, v]) => `<tr><td style="color:#7b6d72;font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:bold">${esc(l)}</td><td style="font-weight:bold">${esc(v)}</td></tr>`).join("")}</table>
-<h3 style="color:#c61f2e;margin:20px 0 6px">Lines for Santa to say</h3><ol style="padding-left:20px;margin:0">${santaLines(k, studio.toy_on).map(l => `<li style="margin-bottom:6px">${esc(l)}</li>`).join("")}</ol>
+<h3 style="color:#c61f2e;margin:20px 0 6px">Lines for Santa to say</h3><ol style="padding-left:20px;margin:0">${santaLines(k, studio.toy_on, toyText(studio).item).map(l => `<li style="margin-bottom:6px">${esc(l)}</li>`).join("")}</ol>
 <p style="margin-top:20px"><a href="${siteUrl()}/dashboard" style="color:#1d6a44;font-weight:bold">See all your families in your dashboard</a></p>`;
   return { subject: `Santa's cheat sheet: ${sub.child_name}`, html: wrap(studio, inner) };
 }
