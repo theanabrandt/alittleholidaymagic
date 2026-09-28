@@ -14,7 +14,7 @@ export default async (req) => {
   if (!child) return json({ error: "Please add your child's first name." }, 400);
 
   const supa = db();
-  const { data: studio } = await supa.from("studios").select("id, slug, name, toy_on, notify_email, owner_email, status").eq("slug", clean(b.slug, 40).toLowerCase()).maybeSingle();
+  const { data: studio } = await supa.from("studios").select("id, slug, name, toy_on, toy, notify_email, owner_email, status").eq("slug", clean(b.slug, 40).toLowerCase()).maybeSingle();
   if (!studio || studio.status !== "active") return json({ error: "This Santa page isn't active." }, 404);
 
   // Light rate limit: max 5 sends per parent email per studio per day.
