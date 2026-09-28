@@ -63,6 +63,7 @@ function fillForm() {
   $("fSlug").value = studio.slug || ""; $("fName").value = studio.name || ""; $("fTag").value = studio.tagline || "";
   $("fNotify").value = studio.notify_email || studio.owner_email; $("fToy").checked = !!studio.toy_on;
   $("fPick").value = studio.gift_pick || "";
+  $("fPrivate").checked = !!studio.private; $("fCode").value = studio.family_code || "";
   { const t = studio.toy || {}, TT = toyText(studio);
     $("tItem").value = t.item || ""; $("tKidTitle").value = t.kid_title || ""; $("tParentTitle").value = t.parent_title || "";
     $("tKidText").value = t.kid_text || TT.kidText; $("tParentText").value = t.parent_text || TT.parentText;
@@ -200,11 +201,13 @@ $("setForm").addEventListener("submit", async e => {
   const days = draft.days.map(d => ({ date: (d.date || "").trim(), time: (d.time || "").trim(), link: (d.link || "").trim() })).filter(d => d.date);
   const badLink = days.find(d => d.link && !/^https?:\/\//i.test(d.link));
   if (badLink) return err(`The booking link for ${badLink.date} should start with https://`);
+  const famCode = $("fCode").value.trim();
+  if ($("fPrivate").checked && !/^[A-Za-z0-9-]{3,30}$/.test(famCode)) return err("Add a family code of 3 to 30 letters or numbers (no spaces), or turn off Booked families only.");
   const noteText = $("fNoteText").value.trim(), nd = $("fNoteDay").value;
   if (noteText && noteText !== NOTES[nd - 1] && noteText !== draft.notes[nd]) draft.notes[nd] = noteText;
   const update = {
     slug, name: $("fName").value.trim(), tagline: $("fTag").value.trim(), color: draft.color,
-    notify_email: $("fNotify").value.trim() || null, toy_on: $("fToy").checked,
+    notify_email: $("fNotify").value.trim() || null, toy_on: $("fToy").checked, private: $("fPrivate").checked, family_code: famCode || null,
     toy: { item: $("tItem").value.trim(), kid_title: $("tKidTitle").value.trim(), kid_text: $("tKidText").value.trim(), parent_title: $("tParentTitle").value.trim(), parent_text: $("tParentText").value.trim() },
     gift_pick: $("fPick").value.trim() || null, town: $("fTown").value,
     days, notes: draft.notes, photos: draft.photos
@@ -262,18 +265,19 @@ $("exportCsv").onclick = () => {
 
 // ---------- Share ----------
 function renderShare() {
-  const base = studio.slug ? `${SITE}/${studio.slug}` : "Save your page link in Settings first";
+  const codeQ = studio.private && studio.family_code ? `code=${encodeURIComponent(studio.family_code)}` : "";
+  const base = studio.slug ? `${SITE}/${studio.slug}${codeQ ? "?" + codeQ : ""}` : "Save your page link in Settings first";
   $("mainLink").textContent = base;
   const box = $("dayLinks"); box.innerHTML = "";
   (studio.days || []).forEach((d, i) => {
     if (!studio.slug) return;
     const w = document.createElement("div"); const lab = document.createElement("div"); lab.style.fontWeight = "800"; lab.textContent = d.date;
-    const row = document.createElement("div"); row.className = "linkbox"; const code = document.createElement("code"); code.id = "dl" + i; code.textContent = `${base}?visit=${i + 1}`;
+    const row = document.createElement("div"); row.className = "linkbox"; const code = document.createElement("code"); code.id = "dl" + i; code.textContent = `${base}${codeQ ? "&" : "?"}visit=${i + 1}`;
     const b = document.createElement("button"); b.type = "button"; b.className = "btn small"; b.textContent = "Copy"; b.dataset.copy = code.id;
     row.append(code, b); w.append(lab, row); box.appendChild(w);
   });
   if (!(studio.days || []).length) { const p = document.createElement("p"); p.className = "fine"; p.style.margin = "0"; p.textContent = "Add Santa session days in Settings to get these links."; box.appendChild(p); }
-  $("shareMsg").value = `A little holiday magic for your family!\n\nYour kids can chat with Santa at the North Pole, get a letter back from him, and land on the official Nice List. Grown-ups can sign up for a note from Santa every morning, December 1 to 24.\n\nMeeting Santa can feel big for little ones. Chatting with him at home first means Santa already knows them on visit day.\n\n${base}\n\nWith love,\n${studio.name || ""}`;
+  $("shareMsg").value = `${studio.private && studio.family_code ? "" : ""}A little holiday magic for your family!\n\nYour kids can chat with Santa at the North Pole, get a letter back from him, and land on the official Nice List. Grown-ups can sign up for a note from Santa every morning, December 1 to 24.\n\nMeeting Santa can feel big for little ones. Chatting with him at home first means Santa already knows them on visit day.\n\n${base}${studio.private && studio.family_code ? `\n\nYour family code: ${studio.family_code.toUpperCase()}` : ""}\n\nWith love,\n${studio.name || ""}`;
 }
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-copy]"); if (!b) return;

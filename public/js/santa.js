@@ -14,11 +14,16 @@ const slug = (path[0] || "demo").toLowerCase();
 const isDemo = slug === "demo" || slug === "santa.html" || slug === "santa";
 const params = new URLSearchParams(location.search);
 
+// Family code for private pages: from the link (?code=) or remembered on this device.
+const CODE_KEY = "alhm-code-" + slug;
+let familyCode = (params.get("code") || "").trim();
+try { if (familyCode) localStorage.setItem(CODE_KEY, familyCode); else familyCode = localStorage.getItem(CODE_KEY) || ""; } catch (e) {}
+
 async function loadStudio() {
   if (isDemo) return Object.assign({}, DEMO_STUDIO);
   if (RESERVED_SLUGS.includes(slug)) return null;
   try {
-    const r = await fetch(`/api/studio?slug=${encodeURIComponent(slug)}`);
+    const r = await fetch(`/api/studio?slug=${encodeURIComponent(slug)}${familyCode ? "&code=" + encodeURIComponent(familyCode) : ""}`);
     if (!r.ok) return null;
     return await r.json();
   } catch (e) { return null; }
@@ -28,8 +33,28 @@ function notFound() {
   $("boot").innerHTML = '<div><h1>We couldn\'t find that Santa page</h1><p>Check the link from your photographer, or <a href="/demo">try the demo</a>.</p></div>';
 }
 
+function lockScreen(S) {
+  document.documentElement.style.setProperty("--brand", S.color || "#c61f2e");
+  document.title = `Chat with Santa · ${S.name}`;
+  const box = document.createElement("div"); box.className = "lock";
+  const img = new Image(); img.alt = ""; img.src = (S.photos && S.photos.wave) || DEFAULT_PHOTOS.avatar;
+  const h = document.createElement("h1"); h.textContent = "A Santa gift for our families";
+  const p = document.createElement("p"); p.textContent = `This page is for ${S.name} families. Enter the family code from your booking email.`;
+  const f = document.createElement("form");
+  f.innerHTML = '<input class="field" id="codeIn" autocomplete="off" aria-label="Family code" placeholder="Family code"><button class="btn red" type="submit">Open</button>';
+  const err = document.createElement("span"); err.className = "err"; err.hidden = !S.wrong; err.textContent = "That code didn't work. Check your booking email and try again.";
+  f.onsubmit = e => { e.preventDefault(); const v = f.querySelector("input").value.trim(); if (!v) return; try { localStorage.setItem(CODE_KEY, v); } catch (x) {} const u = new URL(location.href); u.searchParams.set("code", v); location.href = u.toString(); };
+  box.append(img, h, p, f, err);
+  const link = (S.days || []).find(d => /^https?:\/\//.test(d.link || ""));
+  if (link) { const b = document.createElement("p"); b.innerHTML = 'No code yet? <a class="book" target="_blank" rel="noopener">Book a Santa session</a>'; b.querySelector("a").href = link.link; box.append(b); }
+  $("boot").innerHTML = ""; $("boot").append(box);
+  if (S.wrong) { try { localStorage.removeItem(CODE_KEY); } catch (x) {} }
+  setTimeout(() => f.querySelector("input").focus(), 50);
+}
+
 loadStudio().then(studio => {
   if (!studio) return notFound();
+  if (studio.locked) return lockScreen(studio);
   start(studio);
 });
 
@@ -256,7 +281,7 @@ function start(S) {
     const payload = {
       slug, parentEmail: email, childName: child.split(/\s+/)[0].slice(0, 20),
       answers: k ? { age: k.age, good: k.good, deed: k.deed, sibling: k.sibling, cookie: k.cookie, reindeer: k.reindeer, pet: k.pet, wish: k.wish, more: k.more, helper: k.helper || null } : {},
-      visitDay: bookedDay ? bookedDay.date : null,
+      visitDay: bookedDay ? bookedDay.date : null, code: familyCode,
       wantsLetter: $("cLetter").checked, wantsDaily: $("cDaily").checked, shareWithStudio: $("cShare").checked && !!k,
       website: $("pWebsite").value
     };

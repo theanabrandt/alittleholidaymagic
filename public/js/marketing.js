@@ -4,7 +4,7 @@ import { DEFAULT_PHOTOS, toyText } from "./content.js";
 const GREEN = "#11452c", PINK = "#ffd3d7", CREAM = "#fffdf9", GOLD = "#e5b645", INK = "#1c2a21", MUTED = "#5b6d61";
 const DISPLAY = '"Baloo 2", "Trebuchet MS", sans-serif', BODY = 'Nunito, "Segoe UI", sans-serif';
 
-let S, SITE, LINK, RED, photo, $root;
+let S, SITE, LINK, RED, photo, $root, CODE = "", FULL = "";
 
 // ---------- drawing helpers ----------
 function seeded(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
@@ -218,7 +218,7 @@ T.push({ id: "flyer", group: "Print", title: "Printable QR sign", size: [2550, 3
     y = text(ctx, "Scan to chat with *Santa!*", W / 2, y + 90, { size: 300, align: "center", maxW: W - 360, lh: 0.95 });
     const q = 1200, qx = W / 2 - q / 2, qy = y + 120;
     ctx.fillStyle = "#fff"; rr(ctx, qx - 80, qy - 80, q + 160, q + 160, 80); ctx.fill();
-    drawQR(ctx, LINK, qx, qy, q);
+    drawQR(ctx, FULL, qx, qy, q);
     text(ctx, LINK.replace(/^https?:\/\//, ""), W / 2, qy + q + 160, { size: Math.min(120, (W * 1.7) / LINK.length), color: "#fff", align: "center", maxW: W * 2 });
     text(ctx, S.name || "", W / 2, H - 480, { size: 110, fam: BODY, color: PINK, align: "center", maxW: W - 300 }); },
   caption: () => `Print tip: choose "Fit to page" on letter-size paper. Put one at your front desk, on the Santa set, and in local coffee shops or preschools (with permission).` });
@@ -234,11 +234,12 @@ function drawQR(ctx, url, x, y, size) {
 function words() {
   const short = LINK.replace(/^https?:\/\//, ""), name = S.name || "our studio";
   const days = (S.days || []).filter(d => d.date);
-  const dayLinks = days.map((d, i) => `${d.date}: ${LINK}?visit=${i + 1}`).join("\n");
+  const dayLinks = days.map((d, i) => `${d.date}: ${FULL}${CODE ? "&" : "?"}visit=${i + 1}`).join("\n");
+  const codeLine = CODE ? `\n\nYour family code: ${CODE.toUpperCase()}` : "";
   return [
     { title: "Email to all your clients", when: "Early November", text: `Subject: Santa wants to hear from your little one 🎅\n\nHi there!\n\nThis year we made something magical for our families. Your child can chat with Santa at the North Pole, tell him about their year, and add their wishes to his big book. Santa writes back with a letter and puts them on the official Nice List.\n\nGrown-ups can also sign up for a short note from Santa every morning, December 1 to 24, to read aloud at breakfast.\n\nIt's free for our families:\n${LINK}\n\nWith love,\n${name}` },
-    { title: "Email to families booked for Santa", when: "Right after they book, and again 1 week before", text: `Subject: A secret before your Santa session 🤫\n\nHi!\n\nWe can't wait to see you for your Santa session. Here's a little secret: before you come, let your child chat with Santa using this special link. When you arrive, Santa will already know their name, their wish, and maybe even their pet's name.\n\n${days.length ? "Your special link (pick your session day):\n" + dayLinks : LINK}\n\nAt the end of the chat, open the grown-ups door and tick "Share my child's answers" so Santa gets the details.\n\nSee you soon!\n${name}` },
-    { title: "Line for your booking confirmation", when: "Add once to your booking emails", text: `🎅 Before your session: let your child chat with Santa at home! He'll greet them by name when you arrive. ${days.length ? "Use the link for your day:\n" + dayLinks : LINK}` },
+    { title: "Email to families booked for Santa", when: "Right after they book, and again 1 week before", text: `Subject: A secret before your Santa session 🤫\n\nHi!\n\nWe can't wait to see you for your Santa session. Here's a little secret: before you come, let your child chat with Santa using this special link. When you arrive, Santa will already know their name, their wish, and maybe even their pet's name.\n\n${days.length ? "Your special link (pick your session day):\n" + dayLinks : FULL}${codeLine}\n\nAt the end of the chat, open the grown-ups door and tick "Share my child's answers" so Santa gets the details.\n\nSee you soon!\n${name}` },
+    { title: "Line for your booking confirmation", when: "Add once to your booking emails", text: `🎅 Before your session: let your child chat with Santa at home! He'll greet them by name when you arrive. ${days.length ? "Use the link for your day:\n" + dayLinks : FULL}${codeLine}` },
     { title: "Text message", when: "Any time", text: `Hi from ${name}! 🎅 Your little one can chat with Santa this year and get a letter back from the North Pole. Free for our families: ${short}` },
     { title: "December 1 reminder", when: "December 1", text: `Santa's daily notes start today! 🎄 Sign up to get a short note from Santa every morning until Christmas Eve, perfect for reading aloud at breakfast. Open ${short}, chat with Santa, then find the grown-ups door.` },
     { title: "Christmas Eve text", when: "December 24", text: `Santa has left the North Pole! 🦌 Track his sleigh tonight: ${short}. Merry Christmas from ${name}! ❤️` },
@@ -273,6 +274,8 @@ function loadImg(src) { return new Promise(res => { const i = new Image(); i.cro
 export async function initMarketing(studio, siteUrl, root) {
   S = studio; SITE = siteUrl; $root = root; RED = S.color || "#c61f2e";
   LINK = S.slug ? `${SITE}/${S.slug}` : `${SITE}/yourstudio`;
+  CODE = S.private && S.family_code ? S.family_code : "";
+  FULL = CODE ? `${LINK}?code=${encodeURIComponent(CODE)}` : LINK;
   root.innerHTML = "";
   if (!S.slug) { root.append(el("p", { class: "muted" }, "Save your page link in Settings first. Your graphics use it.")); return; }
   root.append(el("p", { class: "muted", style: "margin:0 0 6px" }, "Loading your graphics…"));
