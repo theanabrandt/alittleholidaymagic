@@ -110,36 +110,78 @@ const SLOTS = { wave: "Waving (header, chat photo)", read: "Daily note", write: 
 function renderSlots() {
   const box = $("slots"); box.innerHTML = "";
   Object.entries(SLOTS).forEach(([k, label]) => {
-    const lab = document.createElement("label"); lab.className = "slot"; lab.htmlFor = "photo-" + k;
+    const wrap = document.createElement("div"); wrap.className = "slot";
     const im = new Image(); im.alt = ""; im.src = draft.photos[k] || DEFAULT_PHOTOS[k];
     const cap = document.createElement("span"); cap.textContent = label;
-    const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; inp.id = "photo-" + k;
-    inp.onchange = () => upload(k, inp.files[0], im);
-    lab.append(im, cap, inp);
-    if (draft.photos[k]) { const r = document.createElement("button"); r.type = "button"; r.className = "btn ghost small"; r.textContent = "Use cartoon Santa"; r.onclick = e => { e.preventDefault(); delete draft.photos[k]; renderSlots(); }; lab.appendChild(r); }
-    box.appendChild(lab);
+    const inp = document.createElement("input"); inp.type = "file"; inp.accept = "image/*"; inp.id = "photo-" + k; inp.className = "slot-file";
+    inp.onchange = () => { const f = inp.files[0]; inp.value = ""; if (f) openCropper(k, URL.createObjectURL(f), im); };
+    const up = document.createElement("label"); up.htmlFor = inp.id; up.className = "btn small"; up.textContent = draft.photos[k] ? "Replace photo" : "Upload photo";
+    const btns = document.createElement("div"); btns.className = "slot-btns"; btns.append(up);
+    if (draft.photos[k]) {
+      const adj = document.createElement("button"); adj.type = "button"; adj.className = "btn ghost small"; adj.textContent = "Adjust crop"; adj.onclick = () => openCropper(k, draft.photos[k], im);
+      const r = document.createElement("button"); r.type = "button"; r.className = "linkbtn"; r.textContent = "Use cartoon Santa"; r.onclick = () => { delete draft.photos[k]; renderSlots(); };
+      btns.append(adj, r);
+    }
+    wrap.append(im, cap, inp, btns); box.appendChild(wrap);
   });
 }
-function shrink(file) {
-  return new Promise((res, rej) => {
-    const url = URL.createObjectURL(file); const i = new Image();
-    i.onload = () => { const s = Math.min(1, 1400 / Math.max(i.width, i.height)); const c = document.createElement("canvas"); c.width = Math.round(i.width * s); c.height = Math.round(i.height * s); c.getContext("2d").drawImage(i, 0, 0, c.width, c.height); c.toBlob(b => { URL.revokeObjectURL(url); b ? res(b) : rej(new Error("Couldn't read that image")); }, "image/jpeg", .85); };
-    i.onerror = () => rej(new Error("That file isn't an image we can read. Try a JPG or PNG."));
-    i.src = url;
-  });
+
+// ---------- Crop and resize ----------
+// Every photo is cropped to a 4:5 portrait. Drag to move, use the slider to zoom.
+const OUT_W = 1000, OUT_H = 1250;
+let crop = null;
+function openCropper(slot, src, im) {
+  $("photoErr").hidden = true;
+  const img = new Image(); img.crossOrigin = "anonymous";
+  img.onload = () => {
+    const c = $("cropCanvas"), W = c.width, H = c.height;
+    const base = Math.max(W / img.width, H / img.height);
+    crop = { slot, img, im, W, H, base, zoom: 1, x: 0, y: 0 };
+    $("cropZoom").value = 1; drawCrop(); $("cropModal").hidden = false; $("cropSave").focus();
+  };
+  img.onerror = () => { $("photoErr").textContent = "We couldn't open that image. Try a JPG or PNG."; $("photoErr").hidden = false; };
+  img.src = src;
 }
-async function upload(slot, file, im) {
-  if (!file) return;
-  $("photoErr").hidden = true; im.style.opacity = .4;
+function clampCrop() {
+  const s = crop.base * crop.zoom, iw = crop.img.width * s, ih = crop.img.height * s;
+  const mx = Math.max(0, (iw - crop.W) / 2), my = Math.max(0, (ih - crop.H) / 2);
+  crop.x = Math.min(mx, Math.max(-mx, crop.x)); crop.y = Math.min(my, Math.max(-my, crop.y));
+}
+function drawCrop(ctx = $("cropCanvas").getContext("2d"), W = crop.W, H = crop.H) {
+  clampCrop();
+  const k = W / crop.W, s = crop.base * crop.zoom * k, iw = crop.img.width * s, ih = crop.img.height * s;
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, W, H);
+  ctx.drawImage(crop.img, W / 2 - iw / 2 + crop.x * k, H / 2 - ih / 2 + crop.y * k, iw, ih);
+}
+(function wireCropper() {
+  const c = $("cropCanvas"); let drag = null;
+  const pt = e => { const r = c.getBoundingClientRect(), t = e.touches ? e.touches[0] : e; return { x: (t.clientX - r.left) * (c.width / r.width), y: (t.clientY - r.top) * (c.height / r.height) }; };
+  const down = e => { if (!crop) return; drag = { p: pt(e), x: crop.x, y: crop.y }; e.preventDefault(); };
+  const move = e => { if (!drag) return; const p = pt(e); crop.x = drag.x + p.x - drag.p.x; crop.y = drag.y + p.y - drag.p.y; drawCrop(); e.preventDefault(); };
+  const up = () => { drag = null; };
+  c.addEventListener("mousedown", down); window.addEventListener("mousemove", move); window.addEventListener("mouseup", up);
+  c.addEventListener("touchstart", down, { passive: false }); window.addEventListener("touchmove", move, { passive: false }); window.addEventListener("touchend", up);
+  c.addEventListener("wheel", e => { if (!crop) return; e.preventDefault(); crop.zoom = Math.min(4, Math.max(1, crop.zoom - e.deltaY * 0.002)); $("cropZoom").value = crop.zoom; drawCrop(); }, { passive: false });
+  $("cropZoom").oninput = () => { if (!crop) return; crop.zoom = +$("cropZoom").value; drawCrop(); };
+  $("cropCancel").onclick = () => { $("cropModal").hidden = true; crop = null; };
+  $("cropSave").onclick = () => saveCrop();
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("cropModal").hidden) $("cropCancel").click(); });
+})();
+async function saveCrop() {
+  const { slot, im } = crop;
+  const out = document.createElement("canvas"); out.width = OUT_W; out.height = OUT_H;
+  drawCrop(out.getContext("2d"), OUT_W, OUT_H);
+  $("cropSave").disabled = true; $("cropSave").textContent = "Saving…";
   try {
-    const blob = await shrink(file);
+    const blob = await new Promise((res, rej) => { try { out.toBlob(b => b ? res(b) : rej(new Error("Couldn't save that crop")), "image/jpeg", .88); } catch (e) { rej(new Error("That photo can't be re-cropped. Upload it again instead.")); } });
     const path = `${studio.id}/${slot}-${Date.now()}.jpg`;
     const { error } = await sb.storage.from("santa-photos").upload(path, blob, { contentType: "image/jpeg", upsert: true });
     if (error) throw error;
     draft.photos[slot] = sb.storage.from("santa-photos").getPublicUrl(path).data.publicUrl;
-    renderSlots();
-    $("saveOk").hidden = true; $("saveErr").textContent = "Photo uploaded. Save changes to put it on your page."; $("saveErr").hidden = false;
-  } catch (e) { $("photoErr").textContent = e.message || "Upload failed. Please try again."; $("photoErr").hidden = false; im.style.opacity = 1; }
+    $("cropModal").hidden = true; crop = null; renderSlots();
+    $("saveOk").hidden = true; $("saveErr").textContent = "Photo ready. Click Save changes to put it on your page."; $("saveErr").hidden = false;
+  } catch (e) { $("cropModal").hidden = true; crop = null; $("photoErr").textContent = e.message || "Upload failed. Please try again."; $("photoErr").hidden = false; }
+  finally { $("cropSave").disabled = false; $("cropSave").textContent = "Use this crop"; }
 }
 
 // save
