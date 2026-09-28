@@ -60,6 +60,7 @@ function start(S) {
   const TT = toyText(S);
   $("toyKidTitle").textContent = TT.kidTitle; $("toyKidText").textContent = TT.kidText;
   $("toyPH").textContent = TT.parentTitle; $("toyPText").textContent = TT.parentText;
+  $("toyMainTitle").textContent = TT.parentTitle; $("toyMainText").textContent = TT.parentText;
   $("cShareText").textContent = `Share my child's answers with ${studioName} so Santa knows them at our visit`;
 
   const sl = $("sessions"); sl.innerHTML = "";
