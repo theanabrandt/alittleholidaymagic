@@ -12,5 +12,5 @@ window.ALHM_CONFIG = {
 
   // When the $74 launch price ends. Use your local time with offset, e.g. "2026-10-15T09:00:00-07:00".
   // Leave "" to show only the $199 price.
-    LAUNCH_ENDS: "2026-09-30T00:00:00-07:00"
+      LAUNCH_ENDS: "2026-10-01T08:00:00-07:00"
 };
