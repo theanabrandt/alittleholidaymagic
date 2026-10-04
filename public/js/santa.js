@@ -105,10 +105,14 @@ function start(S) {
   $("days").textContent = Math.ceil((xmas - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 864e5);
 
   // ---------- Chat ----------
-  const SAMPLE = { name: "Emma", age: "6 or 7", good: "Very good!", deed: "helping with a little brother", sibling: "a little brother", cookie: "sugar cookies", reindeer: "Dasher", pet: "A dog named Biscuit", wish: "a purple bike", more: ["an art set", "a book about unicorns", "a sled"], helper: "Yes" };
+  // Before a child chats, everything uses a friendly generic placeholder (never a sample name).
+  const GENERIC = { name: "friend", age: "", good: "", deed: "being kind", sibling: "", cookie: "sugar cookies", reindeer: "Dasher", pet: "", wish: "", more: [], helper: "" };
+  const KID_KEY = "alhm-kid-" + slug;
   let kid = { more: [] }; let done = false; let step = 0;
+  // Remember this child's chat on this device so daily notes keep their name when they come back.
+  try { const saved = JSON.parse(localStorage.getItem(KID_KEY) || "null"); if (saved && saved.name) { kid = Object.assign({ more: [] }, saved); done = true; } } catch (e) {}
   const log = $("log"), choices = $("choices");
-  const data = () => done ? kid : SAMPLE;
+  const data = () => done ? kid : GENERIC;
 
   function addMsg(text, who) { const d = document.createElement("div"); d.className = "msg " + who; d.textContent = text; log.appendChild(d); log.scrollTop = log.scrollHeight; }
   function addPic(slot, alt) { const d = document.createElement("div"); d.className = "msg santa pic"; const i = new Image(); i.src = P(slot); i.alt = alt; i.onload = () => log.scrollTop = log.scrollHeight; d.appendChild(i); log.appendChild(d); log.scrollTop = log.scrollHeight; }
@@ -171,6 +175,7 @@ function start(S) {
     await santaSays(["I left you a letter, your Nice List certificate, and my favorite cookie recipe in the workshop. Ho ho ho! Merry Christmas!"]);
     addPic("gift", "Santa holding a present");
     done = true; $("pChild").value = kid.name; renderAll();
+    try { localStorage.setItem(KID_KEY, JSON.stringify(kid)); } catch (e) {}
     showButtons(["Go to Santa's Workshop"], () => { $("workshopH").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); showButtons(["Chat again"], restart); });
   }
   function askMore() {
@@ -182,7 +187,7 @@ function start(S) {
     }, [{ label: "That's all!", cls: "done" }]);
   }
   function next() { step++; flow[step] && flow[step](); }
-  function restart() { log.innerHTML = ""; clearChoices(); kid = { more: [] }; done = false; step = 0; renderAll(); flow[0](); }
+  function restart() { log.innerHTML = ""; clearChoices(); kid = { more: [] }; done = false; step = 0; try { localStorage.removeItem(KID_KEY); } catch (e) {} renderAll(); flow[0](); }
   $("restart").onclick = restart;
 
   // ---------- Recipe ----------
@@ -199,6 +204,15 @@ function start(S) {
   // ---------- Letter, certificate, wish list ----------
   function renderResults() {
     const k = data();
+    if (!done) {
+      const ps = ["Dear friend,", "I can't wait to hear from you! Chat with me above, and I'll write you a real letter with your name on it.", "Keep being kind,"];
+      $("letterBody").innerHTML = ""; ps.forEach(t => { const p = document.createElement("p"); p.textContent = t; $("letterBody").appendChild(p); });
+      $("cName").textContent = "Your name here";
+      $("cWhy").textContent = "Chat with Santa to get your name on the Nice List!";
+      $("wlTitle").textContent = "Your child's wish list";
+      const ul = $("wishList"); ul.innerHTML = ""; const li = document.createElement("li"); li.textContent = "Wishes will show up here after your child chats with Santa."; ul.appendChild(li);
+      return;
+    }
     const paras = [`Dear ${k.name},`, `Thank you for chatting with me today! The elves gave you a gold star for ${k.deed} this year, and that made the whole North Pole smile.`,
       `I've written your wish for ${k.wish} in my big book. My workshop is very busy, but the elves will do their very best.`,
       `I'll be looking for ${k.cookie} on Christmas Eve. ${k.reindeer} sends a big snowy hello.`, `Keep being kind,`];
@@ -264,7 +278,7 @@ function start(S) {
   $("lockBtn").onclick = () => { $("grown").hidden = true; $("gate").hidden = false; newGate(); $("grownH").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); };
 
   function copy(txt, okId, selectEl) { const ok = () => { $(okId).hidden = false; setTimeout(() => $(okId).hidden = true, 1800); }; const fb = () => { const r = document.createRange(); r.selectNodeContents(selectEl); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }; try { navigator.clipboard.writeText(txt).then(ok).catch(fb); } catch (e) { fb(); } }
-  $("copyWish").onclick = () => { const k = data(); copy(`${k.name}'s Christmas wish list\n★ ${k.wish} (top wish)\n` + (k.more || []).map(w => "• " + w).join("\n") + `\n\nFrom Santa's chat, courtesy of ${studioName}`, "wishCopied", $("wishList")); };
+  $("copyWish").onclick = () => { if (!done) return; const k = data(); copy(`${k.name}'s Christmas wish list\n★ ${k.wish} (top wish)\n` + (k.more || []).map(w => "• " + w).join("\n") + `\n\nFrom Santa's chat, courtesy of ${studioName}`, "wishCopied", $("wishList")); };
 
   // ---------- Parent form (the only thing that leaves the device) ----------
   $("parentForm").addEventListener("submit", async e => {
@@ -347,6 +361,7 @@ function start(S) {
   liveTick(); setInterval(liveTick, 30000);
 
   // ---------- Go ----------
+  if (done) $("pChild").value = kid.name;
   newGate(); renderGifts(); renderAll(); renderQuiz(); flow[0]();
 
   // snow
