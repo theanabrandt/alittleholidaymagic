@@ -12,5 +12,8 @@ window.ALHM_CONFIG = {
 
   // When the $74 launch price ends. Use your local time with offset, e.g. "2026-10-15T09:00:00-07:00".
   // Leave "" to show only the $199 price.
+  // Free coloring book shown in Santa's Workshop on every studio page. Leave "" to hide it.
+  COLORING_BOOK_URL: "https://drive.google.com/file/d/1xk6ry7BWDZbRcGYOK_31n6EId3DI7bfq/view?usp=sharing",
+
   LAUNCH_ENDS: "2026-10-11T23:59:00-07:00"
 };

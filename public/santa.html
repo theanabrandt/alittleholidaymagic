@@ -137,6 +137,8 @@ body{font-family:var(--body);color:var(--ink);font-size:15px;line-height:1.5;pad
 .section-sub{color:var(--muted);margin:4px 0 0;max-width:62ch}
 .cols{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px;align-items:start}
 .card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;display:grid;gap:12px;align-content:start}
+.color .cover{width:100%;aspect-ratio:1410/1000;object-fit:cover;object-position:center 72%;border-radius:14px;display:block}
+.color .btn{justify-self:start;text-decoration:none}
 .card h3{font-family:var(--display);font-size:22px;margin:0;line-height:1.15}
 .card p{margin:0;color:var(--muted)}
 .art{width:100%;max-width:100%;aspect-ratio:4/3;object-fit:cover;object-position:center 25%;border-radius:14px;display:block}
@@ -392,6 +394,13 @@ select.field{font-size:14px}
         <b id="toyMainTitle">Toy drive</b>
         <p id="toyMainText"></p>
       </div>
+    </article>
+    <article class="card color" id="colorCard" aria-label="Santa coloring book" hidden>
+      <p class="eyebrow">Free printable</p>
+      <img class="cover" id="colorCover" src="/img/coloring-cover.jpg" alt="A smiling Santa from the Christmas coloring book">
+      <h3>Santa's Coloring Book</h3>
+      <p>Grab your crayons! Print a page, color it in, and bring it when you visit Santa. He loves hanging them in his workshop.</p>
+      <a class="btn red" id="colorLink" target="_blank" rel="noopener" href="#">Open the coloring book</a>
     </article>
     <article class="card" aria-label="Nice-o-meter quiz">
       <p class="eyebrow">Bonus game</p>

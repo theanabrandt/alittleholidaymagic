@@ -180,6 +180,15 @@ input[type=color]{width:44px;height:40px;border:0;background:none;padding:0;curs
           </div>
 
           <div class="card sec">
+            <h2>Coloring book</h2>
+            <label class="check" for="cOn"><input type="checkbox" id="cOn"> Show a free coloring book in Santa's Workshop</label>
+            <label class="check" for="cAna"><input type="radio" name="cSrc" id="cAna" value="ana" checked> Use Ana Brandt's Christmas coloring book (the cover says "by Ana Brandt")</label>
+            <label class="check" for="cOwn"><input type="radio" name="cSrc" id="cOwn" value="own"> Use my own coloring book</label>
+            <label class="lbl" for="cUrl">Link to your coloring book (PDF or Google Drive link)<input class="field" id="cUrl" maxlength="500" placeholder="https://"></label>
+            <p class="help">Kids see a card that says "Print a page, color it in, and bring it when you visit Santa." If you use your own, make sure the link is set so anyone can view it.</p>
+          </div>
+
+          <div class="card sec">
             <h2>Santa's daily notes</h2>
             <p class="help">Families who sign up get one note each morning, December 1 to 24. Keep Santa's, or write your own for any day. Type {name} for the child's name.</p>
             <label class="lbl" for="fNoteDay">Day<select class="field" id="fNoteDay"></select></label>
