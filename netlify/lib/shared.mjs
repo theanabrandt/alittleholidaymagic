@@ -12,7 +12,7 @@ export const json = (body, status = 200, headers = {}) =>
 
 export const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 export const siteUrl = () => (env("SITE_URL") || "https://alittleholidaymagic.com").replace(/\/+$/, "");
-export const PUBLIC_COLS = "id, slug, name, tagline, color, town, toy_on, charity, bonus, toy, gift_pick, days, notes, photos";
+export const PUBLIC_COLS = "id, slug, name, tagline, color, town, toy_on, charity, bonus, toy, coloring, gift_pick, days, notes, photos";
 
 // ---------- Email (Resend) ----------
 export async function sendEmail(msg) {
