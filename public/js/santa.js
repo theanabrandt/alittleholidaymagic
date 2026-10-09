@@ -88,16 +88,21 @@ function start(S) {
   $("toyMainTitle").textContent = TT.parentTitle; $("toyMainText").textContent = TT.parentText;
   $("cShareText").textContent = `Share my child's answers with ${studioName} so Santa knows them at our visit`;
 
-  const sl = $("sessions"); sl.innerHTML = "";
-  days.forEach((d, i) => {
-    const li = document.createElement("li"); const booked = bookedDay === d; if (booked) li.className = "booked";
-    const w = document.createElement("div"); const a = document.createElement("div"); a.className = "d"; a.textContent = d.date;
-    const t = document.createElement("div"); t.className = "t"; t.textContent = d.time || ""; w.append(a, t); li.appendChild(w);
-    if (booked) { const c = document.createElement("span"); c.className = "chip"; c.textContent = "You're booked"; li.appendChild(c); }
-    else if (/^https?:\/\//.test(d.link || "")) { const l = document.createElement("a"); l.href = d.link; l.target = "_blank"; l.rel = "noopener"; l.textContent = "Book"; li.appendChild(l); }
-    sl.appendChild(li);
-  });
-  if (!days.length) { const li = document.createElement("li"); li.textContent = "Ask the studio about Santa session days."; sl.appendChild(li); }
+  // Session dates: shown on the main page (top) and again in the grown-ups area.
+  function renderSessions(sl) {
+    sl.innerHTML = "";
+    days.forEach(d => {
+      const li = document.createElement("li"); const booked = bookedDay === d; if (booked) li.className = "booked";
+      const w = document.createElement("div"); const a = document.createElement("div"); a.className = "d"; a.textContent = d.date;
+      const t = document.createElement("div"); t.className = "t"; t.textContent = d.time || ""; w.append(a, t); li.appendChild(w);
+      if (booked) { const c = document.createElement("span"); c.className = "chip"; c.textContent = "You're booked"; li.appendChild(c); }
+      else if (/^https?:\/\//.test(d.link || "")) { const l = document.createElement("a"); l.href = d.link; l.target = "_blank"; l.rel = "noopener"; l.textContent = "Book"; li.appendChild(l); }
+      sl.appendChild(li);
+    });
+    if (!days.length) { const li = document.createElement("li"); li.textContent = "Ask the studio about Santa session days."; sl.appendChild(li); }
+  }
+  renderSessions($("sessions"));
+  if (days.length) { renderSessions($("sessionsTop")); $("bookStudio").textContent = studioName; $("bookTop").hidden = false; }
 
   $("boot").hidden = true; $("app").hidden = false;
 
