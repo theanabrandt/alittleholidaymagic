@@ -68,6 +68,9 @@ function fillForm() {
     $("tItem").value = t.item || ""; $("tKidTitle").value = t.kid_title || ""; $("tParentTitle").value = t.parent_title || "";
     $("tKidText").value = t.kid_text || TT.kidText; $("tParentText").value = t.parent_text || TT.parentText;
     $("tItemEcho").textContent = TT.item; $("tItem").oninput = () => { $("tItemEcho").textContent = $("tItem").value.trim() || "a new, unwrapped toy"; }; }
+  { const c = studio.coloring || {}; $("cOn").checked = !!c.on; $("cUrl").value = c.url || "";
+    (c.source === "own" ? $("cOwn") : $("cAna")).checked = true;
+    const sync = () => { $("cUrl").closest("label").hidden = !$("cOwn").checked; }; $("cAna").onchange = $("cOwn").onchange = sync; sync(); }
   // colors
   const sw = $("swatches"); sw.querySelectorAll(".sw").forEach(n => n.remove());
   COLORS.forEach(c => { const b = document.createElement("button"); b.type = "button"; b.className = "sw"; b.style.background = c; b.setAttribute("aria-label", "Color " + c); b.onclick = () => { draft.color = c; $("fColor").value = c; paintSwatches(); }; sw.insertBefore(b, $("fColor")); });
@@ -203,6 +206,8 @@ $("setForm").addEventListener("submit", async e => {
   if (badLink) return err(`The booking link for ${badLink.date} should start with https://`);
   const famCode = $("fCode").value.trim();
   if ($("fPrivate").checked && !/^[A-Za-z0-9-]{3,30}$/.test(famCode)) return err("Add a family code of 3 to 30 letters or numbers (no spaces), or turn off Booked families only.");
+  const cSrc = $("cOwn").checked ? "own" : "ana", cUrl = $("cUrl").value.trim();
+  if ($("cOn").checked && cSrc === "own" && !/^https?:\/\//i.test(cUrl)) return err("Add a link to your coloring book that starts with https://, or choose Ana Brandt's coloring book.");
   const noteText = $("fNoteText").value.trim(), nd = $("fNoteDay").value;
   if (noteText && noteText !== NOTES[nd - 1] && noteText !== draft.notes[nd]) draft.notes[nd] = noteText;
   const update = {
@@ -210,6 +215,7 @@ $("setForm").addEventListener("submit", async e => {
     notify_email: $("fNotify").value.trim() || null, toy_on: $("fToy").checked, private: $("fPrivate").checked, family_code: famCode || null,
     toy: { item: $("tItem").value.trim(), kid_title: $("tKidTitle").value.trim(), kid_text: $("tKidText").value.trim(), parent_title: $("tParentTitle").value.trim(), parent_text: $("tParentText").value.trim() },
     gift_pick: $("fPick").value.trim() || null, town: $("fTown").value,
+    coloring: { on: $("cOn").checked, source: cSrc, url: cUrl },
     days, notes: draft.notes, photos: draft.photos
   };
   $("saveBtn").disabled = true;

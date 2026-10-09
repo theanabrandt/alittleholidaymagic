@@ -102,6 +102,14 @@ function start(S) {
     if (!days.length) { const li = document.createElement("li"); li.textContent = "Ask the studio about Santa session days."; sl.appendChild(li); }
   }
   renderSessions($("sessions"));
+  // Free coloring book (link set in config.js)
+  // Coloring book: each studio turns it on in Settings and picks Ana's book or their own.
+  { const c = S.coloring || {}; const own = c.source === "own";
+    const url = own ? (c.url || "") : ((window.ALHM_CONFIG || {}).COLORING_BOOK_URL || "");
+    if (c.on && /^https?:\/\//.test(url)) {
+      $("colorLink").href = url; $("colorCard").hidden = false;
+      if (own) { $("colorCover").src = P("gift"); $("colorCover").alt = "Santa holding a present"; }
+    } }
   if (days.length) { renderSessions($("sessionsTop")); $("bookStudio").textContent = studioName; $("bookTop").hidden = false; }
 
   $("boot").hidden = true; $("app").hidden = false;
