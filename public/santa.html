@@ -266,6 +266,10 @@ footer{margin-top:40px;color:var(--muted);font-size:12px;text-align:center}
 .fear{margin-top:16px;background:var(--green-l);border-radius:18px;padding:16px 18px;max-width:760px}
 .fear b{font-family:var(--display);font-size:18px;color:var(--green-d);display:block}
 .fear p{margin:4px 0 0;color:var(--ink)}
+.book-top{margin-top:20px;background:var(--card);border:3px solid var(--brand);border-radius:22px;padding:20px 22px;display:grid;gap:14px;grid-template-columns:1fr 1.2fr;align-items:center}
+.book-top h2{font-family:var(--display);font-size:28px;margin:4px 0 4px;line-height:1.1}
+.book-top .sub{margin:0;color:var(--muted)}
+@media (max-width:720px){.book-top{grid-template-columns:1fr}}
 .sessions{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .sessions li{display:flex;gap:10px;align-items:center;flex-wrap:wrap;border:2px solid var(--line);border-radius:14px;padding:10px 12px}
 .sessions li.booked{border-color:var(--green);background:var(--green-l)}
@@ -314,6 +318,16 @@ select.field{font-size:14px}
       <div class="countdown"><b id="days">—</b><span>sleeps until Christmas</span></div>
     </div>
     <img class="hero-img" data-slot="wave" src="/img/santa-wave.jpg" alt="Santa waving in the snow with his bag of presents">
+  </section>
+
+  <!-- Open Santa session dates (hidden when the studio has no days) -->
+  <section class="book-top" id="bookTop" aria-label="Santa session dates" hidden>
+    <div>
+      <p class="eyebrow" style="margin:0">Open dates</p>
+      <h2>Need a Santa session?</h2>
+      <p class="sub">Come see Santa in person at <span id="bookStudio">the studio</span>. Pick a date and book your spot.</p>
+    </div>
+    <ul class="sessions" id="sessionsTop"></ul>
   </section>
 
   <!-- 1. Santa's note of the day -->
@@ -451,8 +465,8 @@ select.field{font-size:14px}
     </div>
 
     <div class="card" aria-label="Santa visit days">
-      <p class="eyebrow">Visit Santa at the studio</p>
-      <h3>Santa session days</h3>
+      <p class="eyebrow">Open dates</p>
+      <h3>Need a Santa session?</h3>
       <ul class="sessions" id="sessions"></ul>
       <div class="divider"></div>
       <div id="toyParent">
