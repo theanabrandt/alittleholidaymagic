@@ -139,7 +139,7 @@ section{margin-top:72px}
         <span class="tag" id="pTag">Lifetime access</span>
         <div class="amount" id="pAmount"><b>$199</b><span>one time</span></div>
         <div id="pTimerWrap" hidden>
-          <p style="margin:0 0 8px;font-weight:800">Launch price ends in</p>
+          <p style="margin:0 0 8px;font-weight:800">Sale price ends in</p>
           <div class="timer" id="pTimer" aria-live="off"><div><b id="tH">00</b><span>Hours</span></div><div><b id="tM">00</b><span>Min</span></div><div><b id="tS">00</b><span>Sec</span></div></div>
         </div>
         <ul class="incl">
@@ -180,10 +180,10 @@ section{margin-top:72px}
   function tick(){
     var left = end - Date.now();
     if (end && left > 0) {
-      document.getElementById("pAmount").innerHTML = '<b>$74</b><s>$199</s><span>one time</span>';
-      document.getElementById("pTag").textContent = "Launch price";
+      document.getElementById("pAmount").innerHTML = '<b>$99</b><s>$199</s><span>one time</span>';
+      document.getElementById("pTag").textContent = "Sale price";
       document.getElementById("pTimerWrap").hidden = false;
-      buy.href = C.STRIPE_LINK_LAUNCH; buy.textContent = "Get lifetime access for $74";
+      buy.href = C.STRIPE_LINK_LAUNCH; buy.textContent = "Get lifetime access for $99";
       document.getElementById("tH").textContent = pad(Math.floor(left/3600e3));
       document.getElementById("tM").textContent = pad(Math.floor(left%3600e3/60e3));
       document.getElementById("tS").textContent = pad(Math.floor(left%60e3/1e3));
