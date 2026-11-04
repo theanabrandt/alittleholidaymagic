@@ -15,7 +15,7 @@ export default async (req) => {
   if (s.payment_status !== "paid") return json({ received: true });
   // This Stripe account sells many products and every checkout reaches this endpoint.
   // Only A Little Holiday Magic purchases may create a studio or send the welcome email.
-  if (!(await isHolidayMagic(stripe, s.id))) return json({ received: true, ignored: "other product" });
+  if (!(await isHolidayMagic(stripe, s))) return json({ received: true, ignored: "other product" });
   const email = (s.customer_details?.email || s.customer_email || "").toLowerCase().trim();
   if (!email) return json({ error: "No email on session" }, 400);
 
@@ -37,14 +37,16 @@ export default async (req) => {
   }
   return json({ received: true });
 };
+const LINKS = new Set(["plink_1UKXT6KCIC0HUpCCs4lPqY0l", "plink_1UKXTyKCIC0HUpCCiP8Df5ao", "plink_1UW0LOKCIC0HUpCC4sioqcIX"]);
 const PRODUCTS = new Set(["prod_VX4UiajvAXN4x4", "prod_VLDvUIo8wRO5vI", "prod_VLDufyIVEaIxLz"]);
-async function isHolidayMagic(stripe, sessionId) {
-  const items = await stripe.checkout.sessions.listLineItems(sessionId, { limit: 20, expand: ["data.price.product"] });
-  return items.data.some((i) => {
-    const p = i.price && i.price.product;
-    const id = typeof p === "string" ? p : p && p.id;
-    const name = (p && p.name) || i.description || "";
-    return PRODUCTS.has(id) || /holiday magic/i.test(name);
-  });
+async function isHolidayMagic(stripe, s) {
+  if (s.payment_link && LINKS.has(s.payment_link)) return true;
+  try {
+    const items = await stripe.checkout.sessions.listLineItems(s.id, { limit: 20 });
+    return items.data.some((i) => {
+      const p = i.price && i.price.product;
+      return PRODUCTS.has(typeof p === "string" ? p : p && p.id) || /holiday magic/i.test(i.description || "");
+    });
+  } catch (e) { console.error("line items", String(e)); return false; }
 }
 export const config = { path: "/api/stripe-webhook" };
