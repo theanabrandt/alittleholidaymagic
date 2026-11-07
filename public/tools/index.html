@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tool Portal · Ana Brandt</title>
+<meta name="description" content="A plain map of every tool — what each one does, what it replaces, what it works with, and what it costs.">
+<meta property="og:title" content="Every tool, and what it actually does">
+<meta property="og:description" content="What each one does, what it replaces, what it works with, and what it costs.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://thelittlealbum.com/tools/">
+<style>
+  :root{
+    --paper:#F6F4F0; --card:#fff; --ink:#201E1B; --slate:#6b655c; --dim:#9a948b;
+    --clay:#B06A4A; --clay-deep:#8C4F36; --warm:#FBF3EE; --line:#E7E2D9;
+    --sage:#7E9B72; --gold:#C49A3F;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.6}
+  .serif{font-family:"Cormorant Garamond",Georgia,"Times New Roman",serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+  a{color:var(--clay-deep)}
+
+  /* ---------- hero ---------- */
+  header{padding:56px 0 34px;text-align:center}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--clay);margin-bottom:14px}
+  h1{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(32px,6vw,52px);line-height:1.1;
+    font-weight:600;margin:0 0 16px}
+  .lede{font-size:17px;line-height:1.65;color:var(--slate);max-width:640px;margin:0 auto}
+  .lede strong{color:var(--ink)}
+
+  /* ---------- the map ---------- */
+  .mapwrap{background:var(--card);border:1px solid var(--line);border-radius:18px;
+    padding:30px 22px;margin:34px 0 10px}
+  .maphead{text-align:center;margin-bottom:26px}
+  .maphead h2{font-family:"Cormorant Garamond",Georgia,serif;font-size:27px;font-weight:600;margin:0 0 6px}
+  .maphead p{font-size:14.5px;color:var(--slate);margin:0}
+  .hub{max-width:380px;margin:0 auto 10px;background:var(--clay);color:#fff;border-radius:14px;
+    padding:18px 20px;text-align:center;box-shadow:0 6px 22px -10px rgba(176,106,74,.7)}
+  .hub .nm a{color:#fff;text-decoration:none}.hub .nm{font-family:"Cormorant Garamond",Georgia,serif;font-size:24px;font-weight:600}
+  .hub .sub{font-size:13.5px;opacity:.93;margin-top:3px}
+  .stem{width:2px;height:22px;background:var(--line);margin:0 auto}
+  .spokes{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-top:4px}
+  .spoke{background:var(--warm);border:1px solid #EAD9CE;border-radius:12px;padding:14px 16px}
+  .spoke .nm{font-weight:700;font-size:15px;margin-bottom:3px}
+  .spoke .how{font-size:13px;color:var(--slate);line-height:1.5}
+  .orbit{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin-top:14px}
+  .orbit .spoke{background:#F3F5F2;border-color:#DCE4D8}
+  .maplabel{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+    text-align:center;margin:22px 0 10px}
+
+  /* ---------- sections ---------- */
+  section{padding:40px 0 10px}
+  h2.sec{font-family:"Cormorant Garamond",Georgia,serif;font-size:30px;font-weight:600;margin:0 0 6px}
+  .secnote{font-size:15px;color:var(--slate);margin:0 0 22px;max-width:700px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+  .tool{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;
+    display:flex;flex-direction:column}
+  .tool h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:21px;font-weight:600;margin:0 0 2px}
+  .dom{font-size:12.5px;color:var(--dim);margin-bottom:10px;word-break:break-all}
+  .does{font-size:14.5px;line-height:1.6;margin:0 0 14px}
+  .meta{margin-top:auto;padding-top:12px;border-top:1px solid var(--line);font-size:13.5px}
+  .row{display:flex;gap:8px;padding:4px 0;align-items:flex-start}
+  .k{flex:none;width:78px;color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.06em;padding-top:2px}
+  .v{flex:1;line-height:1.5}
+  .price{font-weight:700;color:var(--clay-deep)}
+  .instead{color:var(--slate)}
+  .instead b{color:var(--ink);font-weight:600}
+  .chip{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:20px;
+    background:var(--warm);border:1px solid #EAD9CE;color:var(--clay-deep);margin:0 4px 4px 0}
+  .chip.free{background:#F0F5EE;border-color:#D8E4D3;color:#4F6B46}
+  .chip.check{background:#FDF6E3;border-color:#EFE0B8;color:#8A6D1F}
+
+  /* ---------- replaces table ---------- */
+  .tbl{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;overflow:hidden;font-size:14.5px}
+  .tbl th,.tbl td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+  .tbl th{background:var(--warm);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--clay-deep)}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl td:first-child{font-weight:600;white-space:nowrap}
+
+  /* ---------- honest box ---------- */
+  .honest{background:var(--warm);border:1px solid #EAD9CE;border-radius:14px;padding:22px 24px;margin:26px 0}
+  .honest h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:22px;font-weight:600;margin:0 0 10px}
+  .honest p{font-size:14.5px;line-height:1.65;margin:0 0 10px;color:var(--slate)}
+  .honest p:last-child{margin-bottom:0}
+  .honest strong{color:var(--ink)}
+
+  a.tl{color:inherit;text-decoration:none}
+  a.tl:hover{color:var(--clay-deep);text-decoration:underline;text-underline-offset:3px}
+  a.dom{display:block;color:var(--clay-deep);text-decoration:none}
+  a.dom:hover{text-decoration:underline}
+  a.dom:after{content:" 97"}
+  .back{display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-size:13.5px;color:var(--slate);text-decoration:none}
+  .back:hover{color:var(--clay-deep)}
+  .jump{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:22px auto 0;max-width:900px}
+  .jump a{font-size:13px;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+  .jump a:hover{border-color:var(--clay);color:var(--clay-deep)}
+  footer{padding:40px 0 60px;text-align:center;color:var(--dim);font-size:13px}
+  @media (max-width:640px){
+    .k{width:68px}
+    .mapwrap{padding:22px 14px}
+    /* The comparison table is the one thing that will not fit a phone, and a
+       phone is where most people will open this - it gets sent in a message.
+       So on a narrow screen each row becomes its own small card instead of
+       scrolling sideways, which nobody does. */
+    .tbl, .tbl tbody, .tbl tr, .tbl td{display:block;width:100%}
+    .tbl thead{display:none}
+    .tbl{border:none;background:none}
+    .tbl tr{background:var(--card);border:1px solid var(--line);border-radius:12px;
+      margin-bottom:12px;padding:14px 16px}
+    .tbl td{border:none;padding:0 0 6px}
+    .tbl td:first-child{font-family:"Cormorant Garamond",Georgia,serif;font-size:19px;
+      font-weight:600;white-space:normal;padding-bottom:4px}
+    .tbl td:nth-child(2):before{content:"Stop paying for: ";color:var(--dim);
+      font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+    .tbl td:nth-child(3){color:var(--slate);font-size:13.5px}
+    .tbl tr:last-child td:last-child{padding-bottom:0}
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="eyebrow">Tool Portal · Ana Brandt</div>
+  <h1>Every tool, and what it actually does</h1>
+  <p class="lede">There are a lot of them, they were built one at a time, and they do not all go together.
+  So here is the plain version: <strong>what each one does, what it replaces, what it works with, and what it costs.</strong>
+  If you only read one thing, read the map.</p>
+  <nav class="jump" aria-label="All tools"><a href="https://mystudiobooks.com">My Studio Books</a><a href="https://mystudiosales.com">My Studio Sales</a><a href="https://thelittlealbum.com">The Little Album</a><a href="https://theimagesystem.com">The Image System</a><a href="https://thestudiosocialsystem.com">Studio Social</a><a href="https://thestudiosocialsystem.com/cut-studio-sales.html">Cut Studio</a><a href="https://www.ccdreamstudio.com/">CC Dream Studio</a><a href="https://brandtmedianddesign.com">Brandt Media &amp; Design</a><a href="https://buildmystudiosite.com">My Studio Site</a><a href="https://alittleholidaymagic.com">A Little Holiday Magic</a><a href="https://bellybabymodel.com">Belly Baby Models</a><a href="https://findababyphotographer.com">Find a Baby Photographer</a><a href="https://themoneymapsystem.com">Money Map</a><a href="https://theagentsocialsystem.com">Agent Social</a><a href="https://thecreativekidsstudiosystem.com">Creative Kids</a><a href="https://themarketsocialsystem.com">Market Social</a></nav>
+  <a class="back" href="/">&larr; Back to the site</a>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ THE MAP ============ -->
+  <div class="mapwrap">
+    <div class="maphead">
+      <h2 class="serif">How the studio tools fit together</h2>
+      <p>My Studio Books is the centre. Everything below it plugs in. Everything beside it stands alone.</p>
+    </div>
+
+    <div class="hub">
+      <div class="nm"><a class="tl" href="https://mystudiobooks.com">My Studio Books</a></div>
+      <div class="sub">Your CRM — bookings, galleries, contracts, invoices, client portal</div>
+    </div>
+    <div class="stem"></div>
+
+    <div class="maplabel">Plugs into it</div>
+    <div class="spokes">
+      <div class="spoke">
+        <div class="nm"><a class="tl" href="https://mystudiosales.com">My Studio Sales</a></div>
+        <div class="how">Same login. Sell prints face to face, then the order and invoice land back in your books.</div>
+      </div>
+      <div class="spoke">
+        <div class="nm"><a class="tl" href="https://thelittlealbum.com">The Little Album</a></div>
+        <div class="how">Make a phone album straight from a gallery; the link shows up in your client's portal.</div>
+      </div>
+      <div class="spoke">
+        <div class="nm"><a class="tl" href="#website">Your website</a></div>
+        <div class="how">Built by me or by you — your booking pages and forms embed into it.</div>
+      </div>
+    </div>
+
+    <div class="maplabel">Stands on its own</div>
+    <div class="orbit">
+      <div class="spoke">
+        <div class="nm"><a class="tl" href="https://thestudiosocialsystem.com">Studio Social</a></div>
+        <div class="how">Where you make the content. Nothing to connect — you make a graphic and post it.</div>
+      </div>
+      <div class="spoke">
+        <div class="nm"><a class="tl" href="https://thestudiosocialsystem.com/cut-studio-sales.html">Cut Studio</a></div>
+        <div class="how">Lives inside Studio Social, same login. Video, not photos.</div>
+      </div>
+      <div class="spoke">
+        <div class="nm"><a class="tl" href="https://theimagesystem.com">The Image System</a></div>
+        <div class="how">Runs on your computer, on your own files, before anything reaches a gallery.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ THE CORE ============ -->
+  <section>
+    <h2 class="sec">Running your studio</h2>
+    <p class="secnote">The business end. If you are starting from nothing, start at the top of this list.</p>
+    <div class="grid">
+
+      <div class="tool">
+        <h3><a class="tl" href="https://mystudiobooks.com">My Studio Books</a></h3>
+        <a class="dom" href="https://mystudiobooks.com">mystudiobooks.com</a>
+        <p class="does">Your CRM. Clients, bookings, a public booking page with your own link, mini sessions
+        with held slots, contracts your client signs online, invoices and card payments, galleries,
+        questionnaires, workflows and a client portal. This is the one everything else hangs off.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">$500 lifetime — going up</div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead"><b>17hats, HoneyBook, Dubsado, Sprout Studio, Táve</b></div></div>
+          <div class="row"><div class="k">Note</div><div class="v instead">Not a website, and no shop for your client to order prints herself.</div></div>
+        </div>
+      </div>
+
+      <div class="tool">
+        <h3><a class="tl" href="https://mystudiosales.com">My Studio Sales</a></h3>
+        <a class="dom" href="https://mystudiosales.com">mystudiosales.com</a>
+        <p class="does">For selling in person. A reveal slideshow, room view so your client sees the print on her
+        own wall, then it builds the order and the invoice and gives you a lab-ready export. This is how
+        you sell prints to someone sitting with you, or on a shared screen.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">$199 launch · then $399/yr or $699 lifetime</div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead"><b>ProSelect, Fundy Designer</b></div></div>
+          <div class="row"><div class="k">Works with</div><div class="v"><span class="chip">My Studio Books</span></div></div>
+        </div>
+      </div>
+
+      <div class="tool">
+        <h3><a class="tl" href="https://thelittlealbum.com">The Little Album</a></h3>
+        <a class="dom" href="https://thelittlealbum.com">thelittlealbum.com</a>
+        <p class="does">Phone albums for your clients. You make the album, she installs it on her home screen
+        like an app. Each one stays online a year and you can renew it. Lovely as a gift, a package
+        inclusion, or something you sell on its own.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">$49 lifetime until Sunday, Nov 8 <span style="color:var(--dim);font-weight:400">· then $150/yr</span></div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead"><b>Sticky Albums</b></div></div>
+          <div class="row"><div class="k">Works with</div><div class="v"><span class="chip">My Studio Books</span></div></div>
+        </div>
+      </div>
+
+      <div class="tool">
+        <h3><a class="tl" href="https://theimagesystem.com">The Image System</a></h3>
+        <a class="dom" href="https://theimagesystem.com">theimagesystem.com</a>
+        <p class="does">Sorts and culls your photographs on your own computer. Picks the best of a burst, sets
+        aside screenshots and junk, and exports print-ready folders by year. Works on a hard drive full of
+        a decade of mess, not just this week's session.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">Personal $99 · Pro $199 · Studio $349</div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead"><b>Photo Mechanic</b>, and culling in <b>Lightroom</b></div></div>
+          <div class="row"><div class="k">Note</div><div class="v instead">Studio licence lets you sell the Personal version to your own clients.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ CONTENT ============ -->
+  <section>
+    <h2 class="sec">Making the content</h2>
+    <p class="secnote">Nothing here touches your bookings. These are for what you post and what you hand a client.</p>
+    <div class="grid">
+
+      <div class="tool">
+        <h3><a class="tl" href="https://thestudiosocialsystem.com">Studio Social System</a></h3>
+        <a class="dom" href="https://thestudiosocialsystem.com">thestudiosocialsystem.com</a>
+        <p class="does">Around twenty browser studios for making things — composites, snow globes, birth posters,
+        ultrasound overlays, wall-art previews, announcements, mini books, client guides, carousels.
+        No Photoshop, no subscription, nothing to install.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">$249 lifetime</div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead"><b>Canva Pro</b></div></div>
+          <div class="row"><div class="k">Free inside</div><div class="v"><span class="chip free">Golden Hour planner</span><span class="chip free">Christmas Countdown</span></div></div>
+        </div>
+      </div>
+
+      <div class="tool">
+        <h3><a class="tl" href="https://thestudiosocialsystem.com/cut-studio-sales.html">Cut Studio</a></h3>
+        <a class="dom" href="https://thestudiosocialsystem.com/cut-studio-sales.html">inside Studio Social</a>
+        <p class="does">A video editor that runs in your browser on a computer, not a phone. Captions generated
+        inside the tool, trimming, cutting dead space, b-roll, zoom punches, music, fonts and colour.
+        Built because editing on a phone in busy season is not realistic.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">$97 as a Studio Social add-on · $129 on its own</div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead"><b>CapCut, Instagram Edits</b></div></div>
+          <div class="row"><div class="k">Works with</div><div class="v"><span class="chip">Studio Social — same login</span></div></div>
+        </div>
+      </div>
+
+      <div class="tool">
+        <h3><a class="tl" href="https://www.ccdreamstudio.com/">The Content Creator Dream Studio</a></h3>
+        <a class="dom" href="https://www.ccdreamstudio.com/">ccdreamstudio.com</a>
+        <p class="does">For becoming a content creator or doing UGC, not just posting for your studio. Posts,
+        reel covers, stories, TikToks, carousels and faceless batch mode, with captions, ideas and PDF products
+        you can sell, written for you. Includes a free 7-day "Become a Content Creator" course.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">$49 Club · $99 Unlimited <span style="color:var(--dim);font-weight:400">lifetime</span></div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead"><b>Canva plus ChatGPT</b>, for faceless and UGC content</div></div>
+          <div class="row"><div class="k">Note</div><div class="v instead">Studio Social is templates for your photography; this is for making content as a creator.</div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ WEBSITE ============ -->
+  <section id="website">
+    <h2 class="sec">Your website</h2>
+    <p class="secnote">This is the one people are most often surprised by, so it is worth being blunt:
+    <strong>a website is not part of My Studio Books.</strong> My Studio Books is a CRM. Here are the two ways to get a site.</p>
+    <div class="grid">
+
+      <div class="tool">
+        <h3><a class="tl" href="https://brandtmedianddesign.com">Brandt Media &amp; Design</a></h3>
+        <a class="dom" href="https://brandtmedianddesign.com">brandtmedianddesign.com</a>
+        <p class="does">I build it for you. Hand-coded, fast, editorial, and yours to edit — no template.
+        Your booking pages and forms are wired in while I am in there.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">$500 standard · $1,000 advanced</div></div>
+          <div class="row"><div class="k">Ending</div><div class="v"><span class="chip check">The $500 build is back — two more days only</span></div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead"><b>Squarespace or Showit plus a designer</b></div></div>
+          <div class="row"><div class="k">Add-ons</div><div class="v"><span class="chip">Baby Registry</span><span class="chip">Gender reveal</span></div></div>
+        </div>
+      </div>
+
+      <div class="tool">
+        <h3><a class="tl" href="https://buildmystudiosite.com">My Studio Site</a></h3>
+        <a class="dom" href="https://buildmystudiosite.com">buildmystudiosite.com</a>
+        <p class="does">You build it yourself, with me teaching you how. You end up owning the thing and being
+        able to change it at midnight without asking anyone.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">$350</div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead">Paying a designer every time you want a word changed</div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ CLIENT-FACING EXTRAS ============ -->
+  <section>
+    <h2 class="sec">Things you give your clients</h2>
+    <p class="secnote">Small, bolt-on, and each one sold separately.</p>
+    <div class="grid">
+      <div class="tool">
+        <h3><a class="tl" href="https://alittleholidaymagic.com">A Little Holiday Magic</a></h3>
+        <a class="dom" href="https://alittleholidaymagic.com">alittleholidaymagic.com</a>
+        <p class="does">A scripted Santa chat for children, on your own branded page, with your Santa photos,
+        your session dates and booking links, a toy drive and a Santa tracker. Chatting to Santa first is
+        how a nervous three-year-old stops being frightened of him on the day.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">$74 lifetime, on sale <s style="color:var(--dim);font-weight:400">$199</s></div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead">Nothing — there is not really another one of these</div></div>
+        </div>
+      </div>
+      <div class="tool">
+        <h3><a class="tl" href="https://brandtmedianddesign.com">Baby Registry</a></h3>
+        <a class="dom" href="https://brandtmedianddesign.com">through Brandt Media &amp; Design</a>
+        <p class="does">Your client registers, picks the session or package she wants, and shares a private page.
+        Friends and family pay toward it or buy the whole thing. Installed on your own site and your own
+        payment accounts.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">$250, on sale <s style="color:var(--dim);font-weight:400">$499</s></div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead">Asking a new mother to put a photo session on a baby registry made for nappies</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BEING FOUND ============ -->
+  <section>
+    <h2 class="sec">Being found, and finding people</h2>
+    <div class="grid">
+      <div class="tool">
+        <h3><a class="tl" href="https://bellybabymodel.com">Belly Baby Models</a></h3>
+        <a class="dom" href="https://bellybabymodel.com">bellybabymodel.com</a>
+        <p class="does">Model and photographer matching, international, time-for-print. Models join free and
+        their details stay private; you see anonymous matches and I introduce both sides by email myself.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">$99 lifetime</div></div>
+          <div class="row"><div class="k">Instead of</div><div class="v instead"><b>Model Mayhem</b>, and posting model calls into the void</div></div>
+        </div>
+      </div>
+      <div class="tool">
+        <h3><a class="tl" href="https://findababyphotographer.com">Find a Baby Photographer</a></h3>
+        <a class="dom" href="https://findababyphotographer.com">findababyphotographer.com</a>
+        <p class="does">A directory of photographers I have trained, mentored or certified, for parents looking
+        for someone near them. You keep your own profile up to date yourself.</p>
+        <div class="meta">
+          <div class="row"><div class="k">Price</div><div class="v price">Listings from $49</div></div>
+          <div class="row"><div class="k">Note</div><div class="v instead">Certified photographers get a premium listing free.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NOT FOR PHOTOGRAPHERS ============ -->
+  <section>
+    <h2 class="sec">General tools</h2>
+    <p class="secnote">Same idea, built for other people and other businesses. Listed here so you know they
+    exist — and so you know they are not something you are missing out on as a photographer.</p>
+    <div class="grid">
+      <div class="tool">
+        <h3><a class="tl" href="https://themoneymapsystem.com">The Money Map System</a></h3>
+        <a class="dom" href="https://themoneymapsystem.com">themoneymapsystem.com</a>
+        <p class="does">Bills and payoff planning, personal and business expenses, and a grants area to find,
+        track and write applications. For anyone, not just photographers.</p>
+        <div class="meta"><div class="row"><div class="k">Price</div><div class="v price">$99 on sale <span style="color:var(--dim);font-weight:400">(reg. $299 lifetime)</span></div></div></div>
+      </div>
+      <div class="tool">
+        <h3><a class="tl" href="https://theagentsocialsystem.com">The Agent Social System</a></h3>
+        <a class="dom" href="https://theagentsocialsystem.com">theagentsocialsystem.com</a>
+        <p class="does">Studio Social, rebuilt for estate agents — headshots, listings, business cards, flyers,
+        postcards.</p>
+        <div class="meta"><div class="row"><div class="k">Price</div><div class="v price">$99 on sale <span style="color:var(--dim);font-weight:400">(reg. $299 lifetime)</span></div></div></div>
+      </div>
+      <div class="tool">
+        <h3><a class="tl" href="https://thecreativekidsstudiosystem.com">The Creative Kids Studio System</a></h3>
+        <a class="dom" href="https://thecreativekidsstudiosystem.com">thecreativekidsstudiosystem.com</a>
+        <p class="does">A design studio for children — posters, stickers, comics, colouring pages, books.
+        Built after a kids camp where Canva made every child sign up for Pro.</p>
+        <div class="meta"><div class="row"><div class="k">Price</div><div class="v price">From $99/yr per household</div></div></div>
+      </div>
+      <div class="tool">
+        <h3><a class="tl" href="https://themarketsocialsystem.com">The Market Social System</a></h3>
+        <a class="dom" href="https://themarketsocialsystem.com">themarketsocialsystem.com</a>
+        <p class="does">Content studios for boutiques, makers and market sellers.</p>
+        <div class="meta"><div class="row"><div class="k">Price</div><div class="v instead">See the site</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHAT YOU CAN STOP PAYING FOR ============ -->
+  <section>
+    <h2 class="sec">What you can stop paying for</h2>
+    <p class="secnote">The honest version. Some of these replace a subscription completely. Some only replace
+    part of one, and I have said which.</p>
+    <table class="tbl">
+      <tr><th>If you have</th><th>You can probably stop paying for</th><th>Honestly</th></tr>
+      <tr><td>Studio Social</td><td>Canva Pro</td><td>Fully, for the kind of thing photographers actually make.</td></tr>
+      <tr><td>Cut Studio</td><td>CapCut, Instagram Edits</td><td>Fully, if you edit on a computer. It does not run on a phone.</td></tr>
+      <tr><td>My Studio Sales</td><td>ProSelect, Fundy</td><td>Fully for in-person sales and ordering.</td></tr>
+      <tr><td>My Studio Books</td><td>17hats, HoneyBook, Dubsado, Sprout, Táve</td><td>Fully for the CRM. It is not a website and not a print shop.</td></tr>
+      <tr><td>The Image System</td><td>Photo Mechanic</td><td>Fully for culling and sorting. You will still edit somewhere.</td></tr>
+      <tr><td>The Little Album</td><td>Sticky Albums</td><td>Fully, and your client installs it on her home screen the same way.</td></tr>
+    </table>
+  </section>
+
+  <!-- ============ HONEST BOX ============ -->
+  <section>
+    <div class="honest">
+      <h3 class="serif">Five things people get wrong, so I will say them plainly</h3>
+      <p><strong>A website is not included in My Studio Books.</strong> It is a CRM and I want to keep it true
+      to what it is. Websites are a separate thing, built by me or by you.</p>
+      <p><strong>My Studio Books does not have a shop where your client logs in and orders prints herself.</strong>
+      My Studio Sales is how you sell prints <em>to</em> her — face to face or on a shared screen. Those are two
+      different things and I do not want to blur them.</p>
+      <p><strong>They are separate programs, not one bundle.</strong> The CRM is its own beast. The others were
+      built later, one at a time, because people asked. Some connect to it. None of them are inside it.</p>
+      <p><strong>There is no trial</strong> (the one exception: The Little Album lets you make one free sample album that stays up for 24 hours). Not because I am being difficult, but because people trial a thing,
+      change their mind, and it becomes a mess for everyone.</p>
+      <p><strong>Launch prices on the programs do not come back.</strong> Every program here started lower and
+      has gone up, and it will keep going that way, because the people who got in early have to be
+      honoured. There is no Black Friday price that will beat what is on this page today. A service like a
+      website build is a different thing and can come back on offer — the programs do not.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer class="wrap">
+  Still not sure which of these you need? Message me and say what you are actually trying to fix.
+</footer>
+
+</body>
+</html>
