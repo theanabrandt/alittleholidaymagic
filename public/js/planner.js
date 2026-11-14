@@ -270,7 +270,7 @@ export function mountPlanner(root, opts = {}) {
     const st = store.get(KEY + "kids", { age: null, where: null, time: null, tidy: false, name: "" });
     const out = el("div");
     const save = () => { store.set(KEY + "kids", st); draw(); };
-    const nm = el("input", { class: "pl-in", placeholder: "Child's first name (optional)", value: st.name, maxlength: "12", "aria-label": "Child's first name" });
+    const nm = el("input", { class: "pl-in", style: "width:100%;max-width:340px", placeholder: "Child's first name (optional)", value: st.name, maxlength: "12", "aria-label": "Child's first name" });
     nm.oninput = () => { st.name = nm.value; store.set(KEY + "kids", st); };
     const tidy = el("button", { type: "button", class: "pl-chip", "aria-pressed": String(st.tidy) }, "No-mess only");
     tidy.onclick = () => { st.tidy = !st.tidy; tidy.setAttribute("aria-pressed", String(st.tidy)); save(); };
@@ -285,7 +285,7 @@ export function mountPlanner(root, opts = {}) {
       el("div", { class: "pl-row" },
         el("button", { type: "button", class: "pl-btn small", onclick: wordSearch }, "Print a word search"),
         el("button", { type: "button", class: "pl-btn small", onclick: hunt }, "Print a holiday scavenger hunt"),
-        opts.coloringBook ? el("a", { class: "pl-btn small ghost", href: opts.coloringBook, target: "_blank", rel: "noopener", style: "text-decoration:none" }, "Coloring book") : null));
+        opts.coloringBook ? el("a", { class: "pl-btn small", href: opts.coloringBook, target: "_blank", rel: "noopener", style: "text-decoration:none;display:inline-block" }, "Open the coloring book") : null));
     function draw() {
       out.innerHTML = "";
       const list = shuffle(ACTIVITIES.filter(a => (!st.age || a.a.includes(st.age)) && (!st.where || a.w === st.where || a.w === "either") && (!st.time || a.time === st.time) && (!st.tidy || !a.mess)));

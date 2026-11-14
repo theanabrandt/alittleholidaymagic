@@ -59,7 +59,11 @@ export const NOTES = [
 ];
 export const VISIT_NOTE = "{name}, today's the day you come visit me! I'll be waiting in my big chair, and I already know all about you. Ho ho ho!";
 
-export const fillName = (t, name) => String(t || "").replace(/\{name\}/gi, name || "friend");
+// Fills in the child's name. With no name it says "friend", capitalized at the start of a sentence.
+export const fillName = (t, name) => String(t || "").replace(/\{name\}/gi, (m, at, all) => {
+  const n = name || "friend";
+  return /(^|[.!?]\s+)$/.test(all.slice(0, at)) ? n.charAt(0).toUpperCase() + n.slice(1) : n;
+});
 export const decDate = d => { const m = /\bDec(?:ember)?\.?\s+(\d{1,2})\b/i.exec(d || ""); return m ? +m[1] : null; };
 
 // Toy drive wording. Studios can rewrite every line; blanks fall back to these.
