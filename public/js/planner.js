@@ -47,9 +47,12 @@ const CSS = `
 .pl-stat b{font-family:var(--display,inherit);font-size:26px}
 .pl-stat.over b{color:#b3261e}
 .pl-bars{display:grid;gap:6px;margin-top:8px}
-.pl-bar{display:grid;grid-template-columns:120px 1fr 90px;gap:8px;align-items:center;font-size:14px}
+.pl-bar{display:grid;grid-template-columns:120px 1fr 150px;gap:8px;align-items:center;font-size:14px}
+.pl-bar span:last-child{text-align:right;color:var(--muted,#5b6d61)}
+.pl-bar.over div i{background:#b3261e}
+.pl-bar.over span:last-child{color:#b3261e;font-weight:800}
 .pl-bar div{height:10px;border-radius:99px;background:var(--line,#dce7df);overflow:hidden}
-.pl-bar div i{display:block;height:100%;background:var(--pb)}
+.pl-bar div i{display:block;height:100%;background:#1d6a44;border-radius:99px}
 .pl-x{border:0;background:none;color:var(--muted,#5b6d61);font-size:20px;cursor:pointer;line-height:1}
 .pl-menu{display:grid;gap:10px;margin-top:14px}
 .pl-dish{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:start;border:1px solid var(--line,#dce7df);border-radius:14px;padding:12px;background:var(--paper,#fffdf9)}
@@ -59,7 +62,14 @@ const CSS = `
 .pl-shop h4{margin:10px 0 4px;font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted,#5b6d61)}
 .pl-shop label{display:flex;gap:8px;font-size:15px;break-inside:avoid;padding:2px 0}
 .pl-note{font-size:13px;color:var(--muted,#5b6d61);margin-top:10px}
-@media(max-width:560px){.pl-dish{grid-template-columns:1fr}.pl-bar{grid-template-columns:90px 1fr 70px}}
+@media(max-width:560px){.pl-dish{grid-template-columns:1fr}.pl-bar{grid-template-columns:70px 1fr auto;font-size:13px}
+.pl-tbl thead{display:none}
+.pl-tbl tr{display:grid;grid-template-columns:1fr 1fr 28px;gap:6px;padding:10px 0;border-bottom:1px solid var(--line,#dce7df)}
+.pl-tbl td{padding:0}
+.pl-tbl td:nth-child(2){grid-column:2/4}
+.pl-tbl td.num{position:relative}
+.pl-tbl td.num:before{content:attr(data-label);display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted,#5b6d61);margin-bottom:2px}
+.pl-tbl td:last-child{grid-column:3;grid-row:2;align-self:end;padding-bottom:8px}}
 `;
 
 const el = (tag, attrs = {}, ...kids) => { const e = document.createElement(tag); for (const [k, v] of Object.entries(attrs)) { if (v == null || v === false) continue; if (k === "class") e.className = v; else if (k.startsWith("on")) e[k] = v; else e.setAttribute(k, v === true ? "" : v); } kids.flat().forEach(k => k != null && e.append(k)); return e; };
@@ -220,7 +230,7 @@ export function mountPlanner(root, opts = {}) {
         const cat = el("select", { class: "pl-in", "aria-label": "Category" }, BUDGET_CATS.map(c => el("option", { value: c, selected: r[0] === c }, c))); cat.onchange = () => { r[0] = cat.value; save(); };
         const what = el("input", { class: "pl-in", value: r[1], placeholder: "Mom, teacher gifts, tree…", "aria-label": "For or what" }); what.oninput = () => { r[1] = what.value; save(); };
         const num = k => { const n = el("input", { class: "pl-in", type: "number", min: "0", step: "0.01", inputmode: "decimal", value: r[k], placeholder: "0", "aria-label": k === 2 ? "Planned" : "Spent" }); n.oninput = () => { r[k] = n.value; save(); }; return n; };
-        tbody.append(el("tr", {}, el("td", {}, cat), el("td", {}, what), el("td", { class: "num" }, num(2)), el("td", { class: "num" }, num(3)),
+        tbody.append(el("tr", {}, el("td", {}, cat), el("td", {}, what), el("td", { class: "num", "data-label": "Planned $" }, num(2)), el("td", { class: "num", "data-label": "Spent $" }, num(3)),
           el("td", {}, el("button", { type: "button", class: "pl-x", "aria-label": "Remove line", onclick: () => { st.rows.splice(i, 1); save(); rows(); } }, "×"))));
       });
     }
@@ -231,15 +241,20 @@ export function mountPlanner(root, opts = {}) {
     }
     function summary() {
       const t = totals(); sum.innerHTML = "";
-      const left = t.total - Math.max(t.planned, t.spent);
+      const left = t.total - t.spent;
       sum.append(el("div", { class: "pl-sum" },
         el("div", { class: "pl-stat" }, el("small", {}, "Budget"), el("b", {}, money(t.total))),
         el("div", { class: "pl-stat" + (t.total && t.planned > t.total ? " over" : "") }, el("small", {}, "Planned"), el("b", {}, money(t.planned))),
         el("div", { class: "pl-stat" + (t.total && t.spent > t.total ? " over" : "") }, el("small", {}, "Spent so far"), el("b", {}, money(t.spent))),
-        el("div", { class: "pl-stat" + (t.total && left < 0 ? " over" : "") }, el("small", {}, left < 0 ? "Over by" : "Left to plan"), el("b", {}, t.total ? money(Math.abs(left)) : "–"))));
+        el("div", { class: "pl-stat" + (t.total && left < 0 ? " over" : "") }, el("small", {}, left < 0 ? "Over budget by" : "Left to spend"), el("b", {}, t.total ? money(Math.abs(left)) : "–"))));
       const bars = el("div", { class: "pl-bars" });
-      const max = Math.max(1, ...Object.values(t.by).map(v => Math.max(v[0], v[1])));
-      Object.entries(t.by).filter(([, v]) => v[0] || v[1]).forEach(([c, [pl, sp]]) => bars.append(el("div", { class: "pl-bar" }, el("span", {}, c), el("div", {}, el("i", { style: `width:${Math.round(Math.max(pl, sp) / max * 100)}%` })), el("span", {}, `${money(sp)} / ${money(pl)}`))));
+      Object.entries(t.by).filter(([, v]) => v[0] || v[1]).forEach(([c, [pl, sp]]) => {
+        const over = sp > pl;
+        const pct = pl ? Math.min(100, Math.round(sp / pl * 100)) : (sp ? 100 : 0);
+        const note = over ? `${money(sp)} spent · ${money(sp - pl)} over` : `${money(sp)} of ${money(pl)}`;
+        bars.append(el("div", { class: "pl-bar" + (over ? " over" : "") }, el("span", {}, c), el("div", {}, el("i", { style: `width:${pct}%` })), el("span", {}, note)));
+      });
+      if (bars.children.length) bars.prepend(el("p", { class: "pl-note", style: "margin:0 0 2px" }, "How much of each category's plan you've spent"));
       if (bars.children.length) sum.append(bars);
     }
     function printBudget() {
