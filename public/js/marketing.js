@@ -259,6 +259,58 @@ const IDEAS = [
   ["Christmas Eve", "Post the tracker story. Families love watching Santa stop in their town."]
 ];
 
+
+// ---------- Holiday caption library: posts for the studio's whole business, not just the Santa page ----------
+function captionLibrary() {
+  const name = S.name || "our studio", town = S.town || "our town", short = LINK.replace(/^https?:\/\//, "");
+  const tag = "#" + (S.slug || "studio").replace(/-/g, "");
+  const days = (S.days || []).filter(d => d.date).map(d => `🎄 ${d.date}${d.time ? " · " + d.time : ""}`).join("\n");
+  return [
+    ["Santa sessions", "Booking is open", `Santa is coming to ${name}! 🎅\n\n${days || "Dates are posted at the link in our bio."}\n\nEvery session includes a little North Pole magic: before your visit, your child can chat with Santa at home so he greets them by name.\n\nSpots go fast. Tap the link in our bio to book. ${tag}`],
+    ["Santa sessions", "Last few spots", `⏰ Only a few Santa spots left!\n\nIf you've been waiting for a sign, this is it. Book today and your little one can chat with Santa before your session.\n\nLink in bio. 🎄`],
+    ["Santa sessions", "What to wear", `What to wear for Santa photos 🎅\n\n❤️ Rich reds, greens, cream, or plaid\n🧦 Cozy textures: knits, velvet, corduroy\n✨ Skip big logos and neon\n👟 Don't forget the shoes, they show!\n\nSave this for your session. Questions? Send us a message.`],
+    ["Santa sessions", "Behind the scenes", `Behind the scenes at the North Pole (aka ${name}) 🎬🎄\n\nSet built, cookies ready, Santa's beard fluffed. We can't wait to see your little ones this week!`],
+    ["Gift cards", "Gift cards are here", `🎁 The gift they'll actually keep forever.\n\nPhoto session gift cards from ${name} are available now. Perfect for new parents, grandparents, and anyone who's never in the photos.\n\nMessage us or tap the link in bio to grab one.`],
+    ["Gift cards", "Last-minute gift", `Still shopping? 🎄 A session gift card is the last-minute gift that doesn't look last-minute.\n\nEmailed instantly, ready to print or wrap. DM us "GIFT" and we'll send the details.`],
+    ["Gift cards", "For grandparents", `Hard-to-shop-for grandparents? 💛\n\nGive them a session with the grandkids, or a framed print from this year. They'll talk about it all year.\n\nAsk us about gift cards and print gifts.`],
+    ["Promotions", "Holiday mini sessions", `✨ Holiday minis are here! ✨\n\nShort, sweet sessions with a festive set. Perfect for your Christmas cards.\n\nBook at the link in our bio. ${tag}`],
+    ["Promotions", "Christmas card deadline", `📮 Christmas card reminder!\n\nWant your photos in time for cards? Book this week so your gallery is ready before the mailing rush.`],
+    ["Promotions", "Book for next year", `New year, new memories ✨\n\nWe're opening our calendar for the new year. Maternity, newborn, milestones, and family sessions. Holiday bookers get first pick of dates.\n\nSend us a message to save your spot.`],
+    ["Community", "Free Santa chat for families", `🎅 A free gift for families in ${town}!\n\nYour child can chat with Santa, tell him their wishes, and get a letter and Nice List certificate back. There's a free holiday planner for grown-ups too.\n\n${short}`],
+    ["Community", "Holiday planner for parents", `Parents, we made you something 🎁\n\nA free holiday planner with a gift finder, Secret Santa generator, Christmas budget, kids' activities, and a meal planner with a shopping list.\n\nOpen ${short}, then find the grown-ups door.`],
+    ["Community", "Toy drive", `💚 We're collecting toys for kids in ${town}.\n\nBring a new, unwrapped toy to your session this month and help Santa's helpers spread the magic. Thank you for being part of it!`],
+    ["Community", "Shop local shout-out", `Shopping local this season? 🛍️ Here are a few ${town} businesses we love: \n\n1. \n2. \n3. \n\nTag your favorite local spot in the comments!`],
+    ["Engagement", "This or that", `Holiday this or that 🎄 Comment your answers!\n\nReal tree or fake?\nOpen gifts Christmas Eve or morning?\nCookies or cocoa?\nMatching pajamas: yes or no?`],
+    ["Engagement", "Favorite tradition", `What's one holiday tradition your family never skips? 🎄\n\nOurs: ________. Tell us yours below! ⬇️`],
+    ["Engagement", "Countdown", `How many sleeps until Christmas? 😴🎅 Drop a 🎄 if your kids ask you this every single morning.`],
+    ["Thank you", "Thank you to our families", `To every family who stepped in front of our camera this year: thank you. ❤️\n\nWe got to hold your newborns, laugh with your toddlers, and watch your families grow. We don't take that lightly.\n\nMerry Christmas from all of us at ${name}.`],
+    ["Thank you", "Year in review", `Our year in photos 📸 Swipe through some of our favorite moments.\n\nThank you for trusting us with your stories. Here's to the next one! ✨`],
+    ["Thank you", "Holiday hours", `🎄 Holiday hours at ${name}\n\nClosed: ________\nBack: ________\n\nWe'll still answer messages, just a little slower. Merry Christmas and happy new year!`]
+  ];
+}
+const PLAN = [
+  ["Week of Nov 24", "Santa sessions: booking is open · Gift cards are here · Free Santa chat for families"],
+  ["Week of Dec 1", "What to wear · Holiday planner for parents · This or that"],
+  ["Week of Dec 8", "Behind the scenes · Last few spots · Toy drive"],
+  ["Week of Dec 15", "Last-minute gift · Christmas card deadline · Favorite tradition"],
+  ["Week of Dec 22", "Holiday hours · Christmas Eve tracker story · Thank you to our families"],
+  ["Week of Dec 29", "Year in review · Book for next year"]
+];
+function renderCaptionLibrary(root) {
+  root.append(el("h3", { class: "mk-group" }, "Holiday caption library"),
+    el("p", { class: "muted", style: "margin:-6px 0 12px;max-width:70ch" }, "Ready-to-post captions for your whole studio this season, with your name and link already in. Fill in any blanks, then copy."));
+  const all = captionLibrary(); const cats = ["All", ...new Set(all.map(c => c[0]))];
+  const bar = el("div", { class: "linkbox", style: "margin-bottom:12px" }); const grid = el("div", { class: "mk-grid" });
+  let cur = "All";
+  const draw = () => { grid.innerHTML = ""; all.filter(c => cur === "All" || c[0] === cur).forEach(([cat, title, text]) => {
+    const ta = el("textarea", { class: "field mk-cap", rows: "7" }); ta.value = text;
+    grid.append(el("div", { class: "card mk-card" }, el("b", { class: "mk-title" }, title), el("span", { class: "fine" }, cat), ta, el("div", { class: "linkbox" }, copyBtn(() => ta.value, "Copy caption")))); }); };
+  cats.forEach(c => { const b = el("button", { type: "button", class: "btn small " + (c === cur ? "" : "ghost") }, c); b.onclick = () => { cur = c; bar.querySelectorAll("button").forEach(x => x.className = "btn small ghost"); b.className = "btn small"; draw(); }; bar.append(b); });
+  root.append(bar, grid);
+  root.append(el("h3", { class: "mk-group" }, "Your December posting plan"));
+  const ol = el("ol", { class: "mk-ideas" }); PLAN.forEach(([h, d]) => ol.append(el("li", {}, el("b", {}, h), el("span", {}, d)))); root.append(ol);
+}
+
 // ---------- UI ----------
 const el = (tag, attrs = {}, ...kids) => { const e = document.createElement(tag); Object.entries(attrs).forEach(([k, v]) => k === "class" ? e.className = v : k.startsWith("on") ? e[k] = v : e.setAttribute(k, v)); kids.forEach(k => e.append(k)); return e; };
 function download(canvas, name) {
@@ -321,6 +373,8 @@ export async function initMarketing(studio, siteUrl, root) {
   const wg = el("div", { class: "mk-grid" }); root.append(wg);
   words().forEach(w => { const ta = el("textarea", { class: "field mk-cap", rows: "8" }); ta.value = w.text;
     wg.append(el("div", { class: "card mk-card" }, el("b", { class: "mk-title" }, w.title), el("span", { class: "fine" }, "When: " + w.when), ta, el("div", { class: "linkbox" }, copyBtn(() => ta.value)))); });
+
+  renderCaptionLibrary(root);
 
   root.append(el("h3", { class: "mk-group" }, "More ways to spread the word"));
   const ul = el("ol", { class: "mk-ideas" }); IDEAS.forEach(([h, d]) => ul.append(el("li", {}, el("b", {}, h), el("span", {}, d)))); root.append(ul);

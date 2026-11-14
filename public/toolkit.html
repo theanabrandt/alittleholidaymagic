@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Holiday Planner · Gift Finder, Secret Santa, Budget, Kids' Activities, Meal Planner</title>
+<meta name="description" content="A free family holiday planner: find the perfect gift, draw Secret Santa names, plan your Christmas budget, print kids' activities, and build your holiday menu with a shopping list.">
+<meta property="og:title" content="The free family holiday planner">
+<meta property="og:description" content="Gift Finder, Secret Santa, Christmas budget, kids' activities, and a meal planner with a shopping list. Free.">
+<meta property="og:image" content="https://alittleholidaymagic.com/og-image.jpg">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://alittleholidaymagic.com/toolkit">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;600;700;800&family=Caveat:wght@600&display=swap">
+<link rel="stylesheet" href="/css/site.css">
+<style>
+:root{--brand:#c61f2e}
+.tk-hero{background:var(--green-d);color:#fff;border-radius:24px;padding:34px 26px;margin:6px 0 22px;position:relative;overflow:hidden}
+.tk-hero h1{font-family:var(--display);font-size:clamp(34px,5.5vw,56px);line-height:1;margin:0 0 10px}
+.tk-hero h1 span{color:#ffd3d7}
+.tk-hero p{color:#d5eadd;font-size:18px;max-width:52ch;margin:0}
+.tk-hero .eyebrow{color:#ffd3d7;margin:0 0 10px}
+.tk-cta{margin:30px 0 0;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.tk-cta div{flex:1 1 300px}
+.tk-cta h2{font-family:var(--display);margin:0 0 4px;font-size:24px}
+.tk-cta p{margin:0;color:var(--muted)}
+.tk-studio{display:flex;align-items:center;gap:10px;font-weight:800}
+.tk-studio img{width:40px;height:40px;border-radius:50%;object-fit:cover}
+</style>
+</head>
+<body>
+<div class="stripe" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/" id="tkBrand"><img src="/icon-512.png" alt=""><b>A Little Holiday Magic</b></a>
+    <nav id="tkNav"><a href="/demo">Chat with Santa</a><a class="btn small ghost" href="/#pricing">For photographers</a></nav>
+  </header>
+
+  <section class="tk-hero">
+    <p class="eyebrow" id="tkEyebrow">Free holiday planner</p>
+    <h1>Plan the whole season <span>in one place</span></h1>
+    <p id="tkLead">Find the right gift, draw Secret Santa names, keep your Christmas budget in check, keep the kids busy, and plan the big meal. Everything you type stays on your device.</p>
+  </section>
+
+  <main id="planner" aria-label="Holiday planner"></main>
+
+  <aside class="tk-cta" id="tkCta">
+    <div>
+      <h2>Photographers: give this to your families</h2>
+      <p>Get a Santa page with your studio's name, your own Santa's photos, a Santa chat for kids, daily notes, a Santa Tracker, and this whole holiday planner inside it.</p>
+    </div>
+    <a class="btn red" href="/#pricing">Get your Santa page</a>
+  </aside>
+</div>
+<script src="/config.js"></script>
+<script type="module">
+import { mountPlanner } from "/js/planner.js";
+const C = window.ALHM_CONFIG || {};
+const slug = (new URLSearchParams(location.search).get("s") || "").toLowerCase();
+let studio = null;
+if (/^[a-z0-9-]{3,40}$/.test(slug)) {
+  try { const r = await fetch(`/api/studio?slug=${encodeURIComponent(slug)}`); if (r.ok) studio = await r.json(); } catch (e) {}
+}
+if (studio && studio.name) {
+  // Brand the page for the studio that shared it.
+  if (studio.color) document.documentElement.style.setProperty("--brand", studio.color);
+  document.title = `Holiday Planner · ${studio.name}`;
+  const b = document.getElementById("tkBrand"); b.href = "/" + slug; b.querySelector("b").textContent = studio.name;
+  if (studio.photos && studio.photos.wave) b.querySelector("img").src = studio.photos.wave;
+  document.getElementById("tkNav").innerHTML = "";
+  const a = document.createElement("a"); a.className = "btn small ghost"; a.href = "/" + slug; a.textContent = "Chat with Santa"; document.getElementById("tkNav").append(a);
+  document.getElementById("tkEyebrow").textContent = `A holiday gift from ${studio.name}`;
+  document.getElementById("tkCta").hidden = true;
+}
+mountPlanner(document.getElementById("planner"), {
+  brand: studio && studio.color, studio: studio && !studio.locked ? Object.assign({ slug }, studio) : (studio ? { slug, name: studio.name } : null),
+  site: C.SITE_URL || location.origin, coloringBook: C.COLORING_BOOK_URL || ""
+});
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 // Shared content for the family page, the dashboard, and the email functions.
 // ES module: imported by the browser and bundled into Netlify functions.
 
-export const RESERVED_SLUGS = ["api","dashboard","demo","privacy","terms","js","img","css","admin","login","santa","unsubscribe","www","mail","help","support"];
+export const RESERVED_SLUGS = ["api","dashboard","demo","privacy","terms","js","img","css","admin","login","santa","unsubscribe","www","mail","help","support","toolkit"];
 
 export const DEFAULT_PHOTOS = {
   wave: "/img/santa-wave.jpg",

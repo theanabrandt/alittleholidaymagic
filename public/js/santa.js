@@ -287,7 +287,18 @@ function start(S) {
   const W = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen","twenty"];
   let gateAns = 0;
   function newGate() { const a = 6 + Math.floor(Math.random() * 9), b = 3 + Math.floor(Math.random() * 7); gateAns = a + b; $("gateQ").textContent = `What is ${W[a]} plus ${W[b]}?`; $("gateA").value = ""; }
-  $("gateForm").addEventListener("submit", e => { e.preventDefault(); if (parseInt($("gateA").value, 10) === gateAns) { $("gate").hidden = true; $("grown").hidden = false; $("gateErr").hidden = true; } else { $("gateErr").hidden = false; newGate(); } });
+  $("gateForm").addEventListener("submit", e => { e.preventDefault(); if (parseInt($("gateA").value, 10) === gateAns) { $("gate").hidden = true; $("grown").hidden = false; $("gateErr").hidden = true; openPlanner(); } else { $("gateErr").hidden = false; newGate(); } });
+  // Holiday Planner loads the first time the grown-ups door opens.
+  let plannerOn = false;
+  function openPlanner() {
+    if (plannerOn) return; plannerOn = true;
+    const c = S.coloring || {}; const cUrl = c.source === "own" ? (c.url || "") : ((window.ALHM_CONFIG || {}).COLORING_BOOK_URL || "");
+    import("./planner.js").then(m => m.mountPlanner($("planner"), {
+      brand: S.color, studio: { slug: isDemo ? "" : slug, name: S.name, gift_pick: S.gift_pick },
+      site: (window.ALHM_CONFIG || {}).SITE_URL || location.origin,
+      coloringBook: c.on && /^https?:\/\//.test(cUrl) ? cUrl : ""
+    })).catch(() => { plannerOn = false; $("planner").textContent = "The planner didn't load. Refresh the page to try again."; });
+  }
   $("lockBtn").onclick = () => { $("grown").hidden = true; $("gate").hidden = false; newGate(); $("grownH").scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); };
 
   function copy(txt, okId, selectEl) { const ok = () => { $(okId).hidden = false; setTimeout(() => $(okId).hidden = true, 1800); }; const fb = () => { const r = document.createRange(); r.selectNodeContents(selectEl); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }; try { navigator.clipboard.writeText(txt).then(ok).catch(fb); } catch (e) { fb(); } }
