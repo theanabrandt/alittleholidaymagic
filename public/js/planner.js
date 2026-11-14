@@ -382,9 +382,9 @@ function renderReveal(wrap, o, brand) {
   function show() {
     hidden.innerHTML = "";
     const date = o.d ? new Date(o.d + "T12:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }) : "";
-    hidden.append(el("h3", {}, "You're buying for…"), el("div", { class: "pl-big" }, o.r),
+    hidden.append(...[el("h3", {}, "You're buying for…"), el("div", { class: "pl-big" }, o.r),
       o.b ? el("p", {}, `Spending limit: ${o.b}`) : null, date ? el("p", {}, `Gift exchange: ${date}`) : null,
-      el("p", { style: "font-size:14px;opacity:.9" }, "Shh! Keep it a secret. Need ideas? Try the Gift Finder below."));
+      el("p", { style: "font-size:14px;opacity:.9" }, "Shh! Keep it a secret. Need ideas? Try the Gift Finder below.")].filter(Boolean));
     const more = el("p", { style: "margin-top:16px" }, el("a", { href: location.pathname + (new URLSearchParams(location.search).get("s") ? "?s=" + encodeURIComponent(new URLSearchParams(location.search).get("s")) : ""), style: "color:#fff;font-weight:800" }, "Open the Gift Finder"));
     hidden.append(more);
   }

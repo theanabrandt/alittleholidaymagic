@@ -121,6 +121,15 @@ input[type=color]{width:44px;height:40px;border:0;background:none;padding:0;curs
       <a class="btn red" id="viewPage" href="#" target="_blank" rel="noopener">View my Santa page</a>
     </div>
 
+    <div class="card" id="whatsNew" style="margin:0 0 18px;padding:16px 18px;border:2px solid var(--red);display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+      <span style="background:var(--red);color:#fff;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:4px 10px">What's new</span>
+      <div style="flex:1 1 320px"><b>A Holiday Planner is now on your Santa page.</b> Parents get a Gift Finder (with your gift pick first), Secret Santa, a budget planner, kids' activities, and a meal planner behind the grown-ups door. Plus 20 new holiday captions in your Marketing tab. Nothing to set up.</div>
+      <a class="btn small" href="/toolkit" target="_blank" rel="noopener">Preview it</a>
+      <button class="btn small ghost" type="button" id="wnMkt">See the captions</button>
+      <button class="btn small ghost" type="button" aria-label="Hide this" id="wnX" style="padding-inline:10px">×</button>
+    </div>
+    <script>(function(){var k="alhm-wn-planner";var b=document.getElementById("whatsNew");try{if(localStorage.getItem(k))b.hidden=true}catch(e){}document.getElementById("wnX").onclick=function(){b.hidden=true;try{localStorage.setItem(k,"1")}catch(e){}};document.getElementById("wnMkt").onclick=function(){document.getElementById("t-mkt").click();document.getElementById("p-mkt").scrollIntoView({behavior:"smooth"})}})();</script>
+
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" id="t-set" aria-selected="true" aria-controls="p-set">Settings</button>
       <button class="tab" role="tab" id="t-fam" aria-selected="false" aria-controls="p-fam">Families</button>

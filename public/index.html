@@ -70,6 +70,15 @@ section{margin-top:72px}
 .faq summary{font-weight:800;cursor:pointer;font-size:17px}
 .faq p{margin:10px 0 0;color:var(--muted)}
 @media(max-width:520px){.tool-portal-btn{font-size:0!important;gap:0!important;padding:8px!important;border-radius:9px!important}}
+.wn{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px 22px}
+.wn-badge{display:inline-block;background:var(--red);color:#fff;font-weight:800;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:4px 10px;margin-bottom:8px}
+.wn-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px;margin-top:18px}
+.wn-card{display:grid;gap:8px;align-content:start}
+.wn-card figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--bg);aspect-ratio:4/3}
+.wn-card img{width:100%;height:100%;object-fit:cover;object-position:top}
+.wn-card b{font-family:var(--display);font-size:21px;line-height:1.1}
+.wn-card span{color:var(--muted);font-size:15px}
+.wn-more{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:20px}
 </style>
 <!-- Ana Brandt Partners tracking -->
 <script src="https://anabrandt-partners.netlify.app/t.js" data-program="holiday-magic" defer></script>
@@ -79,7 +88,7 @@ section{margin-top:72px}
 <div class="wrap">
   <header class="top">
     <a class="brand" href="/"><img src="/icon-512.png" alt=""><b>A Little Holiday Magic</b></a>
-    <nav><a href="/demo">Demo</a><a href="/guide">How it works</a><a href="#pricing">Pricing</a><a href="/tools/" class="tool-portal-btn" aria-label="Tool Portal" title="Tool Portal: every tool and what it does" style="display:inline-flex;align-items:center;gap:7px;padding:7px 14px 7px 9px;border-radius:9px 999px 999px 9px;background:#201E1B;color:#FBF8F2;font:600 13px/1.1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;letter-spacing:.02em;text-decoration:none;white-space:nowrap;text-transform:none;box-shadow:inset 0 0 0 1.5px #B06A4A;flex:none"><svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" style="flex:none"><rect x="1" y="1" width="6" height="6" rx="1.6" fill="#E7C3A9"/><rect x="9" y="1" width="6" height="6" rx="1.6" fill="#B06A4A"/><rect x="1" y="9" width="6" height="6" rx="1.6" fill="#B06A4A"/><rect x="9" y="9" width="6" height="6" rx="3" fill="#E7C3A9"/></svg>Tool Portal</a><a class="btn small ghost" href="/dashboard">Studio sign in</a></nav>
+    <nav><a href="/demo">Demo</a><a href="#whats-new">What's new</a><a href="/guide">How it works</a><a href="#pricing">Pricing</a><a href="/tools/" class="tool-portal-btn" aria-label="Tool Portal" title="Tool Portal: every tool and what it does" style="display:inline-flex;align-items:center;gap:7px;padding:7px 14px 7px 9px;border-radius:9px 999px 999px 9px;background:#201E1B;color:#FBF8F2;font:600 13px/1.1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;letter-spacing:.02em;text-decoration:none;white-space:nowrap;text-transform:none;box-shadow:inset 0 0 0 1.5px #B06A4A;flex:none"><svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" style="flex:none"><rect x="1" y="1" width="6" height="6" rx="1.6" fill="#E7C3A9"/><rect x="9" y="1" width="6" height="6" rx="1.6" fill="#B06A4A"/><rect x="1" y="9" width="6" height="6" rx="1.6" fill="#B06A4A"/><rect x="9" y="9" width="6" height="6" rx="3" fill="#E7C3A9"/></svg>Tool Portal</a><a class="btn small ghost" href="/dashboard">Studio sign in</a></nav>
   </header>
 
   <div class="hero">
@@ -128,6 +137,24 @@ section{margin-top:72px}
         <h2>Nervous little ones meet Santa like an old friend</h2>
         <p>Meeting Santa can feel big and a little scary. When a child has already chatted with him at home, Santa greets them by name and asks about their dog and their favorite cookie. They relax, and that's when the real smiles happen.</p>
       </div>
+    </div>
+  </section>
+
+  <section id="whats-new">
+    <div class="wn">
+      <span class="wn-badge">What's new</span>
+      <h2 style="margin:0">A Holiday Planner for parents, inside every Santa page</h2>
+      <p class="muted" style="margin:8px 0 0;max-width:62ch">Five new tools sit behind the grown-ups door with your studio's name and color. They're included free for everyone who already has a Santa page. No AI, and nothing families type leaves their device.</p>
+      <div class="wn-grid">
+        <div class="wn-card"><figure><img src="/img/new/gift-finder.jpg" alt="Sample of the Gift Finder" loading="lazy" width="1092" height="900"></figure><b>Gift Finder</b><span>Pick an age, interests, and a budget. Your studio's own gift pick shows first.</span></div>
+        <div class="wn-card"><figure><img src="/img/new/secret-santa.jpg" alt="Sample of the Secret Santa Generator" loading="lazy" width="1092" height="900"></figure><b>Secret Santa Generator</b><span>Draw names with "couples can't match" rules. Everyone gets a private link.</span></div>
+        <div class="wn-card"><figure><img src="/img/new/secret-santa-reveal.jpg" alt="Sample of the Private reveal links" style="object-position:center" loading="lazy" width="1092" height="900"></figure><b>Private reveal links</b><span>Each person taps their link to see who they got, with your studio's color.</span></div>
+        <div class="wn-card"><figure><img src="/img/new/budget.jpg" alt="Sample of the Christmas Budget Planner" loading="lazy" width="1092" height="900"></figure><b>Christmas Budget Planner</b><span>Planned vs. spent by category, so families see what's left. Printable.</span></div>
+        <div class="wn-card"><figure><img src="/img/new/kids-activities.jpg" alt="Sample of the Kids' Activities and printables" loading="lazy" width="1092" height="900"></figure><b>Kids' Activities and printables</b><span>32 ideas by age, time, and mess, plus a word search with the child's name.</span></div>
+        <div class="wn-card"><figure><img src="/img/new/meal-planner.jpg" alt="Sample of the Meal Planner" loading="lazy" width="1092" height="900"></figure><b>Meal Planner</b><span>Dinner, Christmas Eve, or brunch for any number of guests, with gluten-free, dairy-free, vegetarian, and nut-free options and one shopping list.</span></div>
+        <div class="wn-card"><figure style="display:grid;place-items:center;padding:22px;background:var(--green-d);color:#fff;text-align:center"><div><div style="font-size:44px">✍️</div><div style="font-family:var(--display);font-size:24px;line-height:1.1;margin-top:6px">20 ready-to-post captions</div><div style="color:#d5eadd;margin-top:6px">Santa sessions · gift cards · minis · thank-yous</div></div></figure><b>Holiday caption library</b><span>New in your dashboard's Marketing tab: captions with your studio name and link filled in, plus a December posting plan.</span></div>
+      </div>
+      <div class="wn-more"><a class="btn red" href="/toolkit">Try the Holiday Planner</a><a class="btn ghost" href="/demo">See it on the demo Santa page</a></div>
     </div>
   </section>
 
