@@ -121,6 +121,15 @@
     .tbl td:nth-child(3){color:var(--slate);font-size:13.5px}
     .tbl tr:last-child td:last-child{padding-bottom:0}
   }
+
+  /* ---------- sale pricing (applied by date, see script at end) ---------- */
+  #saleBar{background:var(--clay);color:#fff;border-radius:14px;padding:14px 18px;margin:0 0 14px;
+    text-align:center;font-size:14.5px;line-height:1.55}
+  #saleBar b{font-weight:700}
+  #saleBar a{color:#fff;text-decoration:underline;font-weight:700;white-space:nowrap}
+  .price s{color:var(--dim);font-weight:400;margin-right:7px}
+  .salenote{display:block;margin-top:3px;font-size:11px;font-weight:700;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--sage)}
 </style>
 </head>
 <body>
@@ -136,6 +145,8 @@
 </header>
 
 <div class="wrap">
+
+  <div id="saleBar" hidden></div>
 
   <!-- ============ THE MAP ============ -->
   <div class="mapwrap">
@@ -272,7 +283,7 @@
         inside the tool, trimming, cutting dead space, b-roll, zoom punches, music, fonts and colour.
         Built because editing on a phone in busy season is not realistic.</p>
         <div class="meta">
-          <div class="row"><div class="k">Price</div><div class="v price">$97 as a Studio Social add-on · $129 on its own</div></div>
+          <div class="row"><div class="k">Price</div><div class="v price">$129 on its own · $97 as a Studio Social add-on</div></div>
           <div class="row"><div class="k">Instead of</div><div class="v instead"><b>CapCut, Instagram Edits</b></div></div>
           <div class="row"><div class="k">Works with</div><div class="v"><span class="chip">Studio Social — same login</span></div></div>
         </div>
@@ -368,7 +379,7 @@
         <p class="does">Model and photographer matching, international, time-for-print. Models join free and
         their details stay private; you see anonymous matches and I introduce both sides by email myself.</p>
         <div class="meta">
-          <div class="row"><div class="k">Price</div><div class="v price">$99 lifetime</div></div>
+          <div class="row"><div class="k">Price</div><div class="v price">$199 lifetime</div></div>
           <div class="row"><div class="k">Instead of</div><div class="v instead"><b>Model Mayhem</b>, and posting model calls into the void</div></div>
         </div>
       </div>
@@ -416,7 +427,7 @@
         <h3><a class="tl" href="https://themarketsocialsystem.com">The Market Social System</a></h3>
         <a class="dom" href="https://themarketsocialsystem.com">themarketsocialsystem.com</a>
         <p class="does">Content studios for boutiques, makers and market sellers.</p>
-        <div class="meta"><div class="row"><div class="k">Price</div><div class="v instead">See the site</div></div></div>
+        <div class="meta"><div class="row"><div class="k">Price</div><div class="v price">$99</div></div></div>
       </div>
     </div>
   </section>
@@ -462,6 +473,63 @@
 <footer class="wrap">
   Still not sure which of these you need? Message me and say what you are actually trying to fix.
 </footer>
+
+<!-- Sale prices, applied by date to match blackfriday.anabrandteducation.com.
+     Regular prices live in the HTML above and come back on their own after Nov 30. -->
+<script>
+(function(){
+  var FOUNDING_ENDS = new Date("2026-11-21T23:59:59-08:00").getTime();
+  var BF_ENDS       = new Date("2026-11-30T23:59:59-08:00").getTime();
+  var BF_URL        = "https://blackfriday.anabrandteducation.com";
+  var now   = Date.now();
+  var phase = now <= FOUNDING_ENDS ? "founding" : (now <= BF_ENDS ? "bf" : "");
+  if (!phase) return;
+
+  var SALE = {
+    "My Studio Books":                 {founding:"$500 lifetime",                         bf:"$600 lifetime"},
+    "My Studio Sales":                 {founding:"$199 lifetime",                         bf:"$489 lifetime"},
+    "The Little Album":                {founding:"$49 lifetime",                          bf:"$105/yr"},
+    "The Image System":                {founding:"Personal $49 \u00b7 Pro $147 \u00b7 Studio $247",
+                                        bf:"Personal $69 \u00b7 Pro $179 \u00b7 Studio $299"},
+    "Studio Social System":            {founding:"$99 lifetime",                          bf:"$199 lifetime"},
+    "Cut Studio":                      {founding:"$97 on its own",                       bf:""},
+    "A Little Holiday Magic":          {founding:"$74 lifetime",                          bf:"$139 lifetime"},
+    "Belly Baby Models":               {founding:"$99 lifetime",                          bf:"$139 lifetime"},
+    "The Money Map System":            {founding:"$99 lifetime",                          bf:"$209 lifetime"},
+    "The Agent Social System":         {founding:"$99 lifetime",                          bf:"$209 lifetime"},
+    "The Creative Kids Studio System": {founding:"$49 per household",                     bf:"$69/yr per household"},
+    "The Market Social System":        {founding:"$69",                                   bf:"$69"}
+  };
+
+  var note = phase === "founding"
+    ? "Founding price \u00b7 ends Sat 11:59pm PT"
+    : "Black Friday price \u00b7 ends Mon Nov 30";
+
+  var changed = 0;
+  Array.prototype.forEach.call(document.querySelectorAll(".tool"), function(card){
+    var titleEl = card.querySelector("h3 .tl");
+    if (!titleEl) return;
+    var deal = SALE[titleEl.textContent.trim()];
+    if (!deal || !deal[phase]) return;
+    var cell = card.querySelector(".v.price");
+    if (!cell) return;
+    var regular = cell.textContent.trim();
+    cell.innerHTML = '<s></s><span class="now"></span><span class="salenote"></span>';
+    cell.querySelector("s").textContent = regular;
+    cell.querySelector(".now").textContent = deal[phase];
+    cell.querySelector(".salenote").textContent = note;
+    changed++;
+  });
+
+  var bar = document.getElementById("saleBar");
+  if (bar && changed) {
+    bar.innerHTML = phase === "founding"
+      ? '<b>48-hour founding prices.</b> The prices below are what my very first buyers paid, good through Saturday, November 21 at 11:59pm Pacific. On Sunday the Black Friday prices take over. <a href="' + BF_URL + '">See everything on sale &rarr;</a>'
+      : '<b>Black Friday prices.</b> On sale through Monday, November 30, then everything returns to regular on December 1. <a href="' + BF_URL + '">See everything on sale &rarr;</a>';
+    bar.hidden = false;
+  }
+})();
+</script>
 
 <!-- My Studio HQ: "Want our new dashboard?" button (hq.anabrandteducation.com/button.html) -->
 <script src="https://hq.anabrandteducation.com/button.js" async></script>
