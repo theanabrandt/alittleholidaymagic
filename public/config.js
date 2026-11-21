@@ -7,7 +7,7 @@ window.ALHM_CONFIG = {
   SUPABASE_ANON_KEY: "sb_publishable_P0FtG0cMGokc5OhPb51qnA_d6uP3FKW",
 
   // Stripe Payment Links (Stripe → Payment Links → copy link)
-  STRIPE_LINK_LAUNCH: "https://buy.stripe.com/aFacN67TjeQQ7DIeiv33W26",   // $74 sale price
+  STRIPE_LINK_LAUNCH: "https://buy.stripe.com/dRmeVe5Lb2445vA5LZ33W3R",   // $74 founding price (48-hour pre-Black-Friday sale)
   STRIPE_LINK_FULL:   "https://buy.stripe.com/00wdRa0qR6kkbTYcan33W27",  // $199 lifetime
 
   // When the $74 sale price ends. Use your local time with offset, e.g. "2026-10-15T09:00:00-07:00".
@@ -15,5 +15,5 @@ window.ALHM_CONFIG = {
   // Free coloring book shown in Santa's Workshop on every studio page. Leave "" to hide it.
   COLORING_BOOK_URL: "https://drive.google.com/file/d/1xk6ry7BWDZbRcGYOK_31n6EId3DI7bfq/view?usp=sharing",
 
-  LAUNCH_ENDS: "2026-11-15T23:59:00-08:00"
+  LAUNCH_ENDS: "2026-11-21T23:59:00-08:00"
 };
