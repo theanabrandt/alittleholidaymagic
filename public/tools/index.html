@@ -475,10 +475,11 @@
 </footer>
 
 <!-- Sale prices, applied by date to match blackfriday.anabrandteducation.com.
-     Regular prices live in the HTML above and come back on their own after Nov 30. -->
+     Regular prices live in the HTML above and come back on their own after Nov 30.
+     Presale (founding) prices run until Mon Nov 23 at 12:00pm PT. -->
 <script>
 (function(){
-  var FOUNDING_ENDS = new Date("2026-11-21T23:59:59-08:00").getTime();
+  var FOUNDING_ENDS = new Date("2026-11-23T12:00:00-08:00").getTime();
   var BF_ENDS       = new Date("2026-11-30T23:59:59-08:00").getTime();
   var BF_URL        = "https://blackfriday.anabrandteducation.com";
   var now   = Date.now();
@@ -502,7 +503,7 @@
   };
 
   var note = phase === "founding"
-    ? "Founding price \u00b7 ends Sat 11:59pm PT"
+    ? "Founding price \u00b7 ends Mon 12pm PT"
     : "Black Friday price \u00b7 ends Mon Nov 30";
 
   var changed = 0;
@@ -524,7 +525,7 @@
   var bar = document.getElementById("saleBar");
   if (bar && changed) {
     bar.innerHTML = phase === "founding"
-      ? '<b>48-hour founding prices.</b> The prices below are what my very first buyers paid, good through Saturday, November 21 at 11:59pm Pacific. On Sunday the Black Friday prices take over. <a href="' + BF_URL + '">See everything on sale &rarr;</a>'
+      ? '<b>Presale \u2014 founding prices.</b> The prices below are what my very first buyers paid, good until Monday, November 23 at 12:00pm Pacific. After that the Black Friday prices take over, through Monday, November 30. <a href="' + BF_URL + '">See everything on sale &rarr;</a>'
       : '<b>Black Friday prices.</b> On sale through Monday, November 30, then everything returns to regular on December 1. <a href="' + BF_URL + '">See everything on sale &rarr;</a>';
     bar.hidden = false;
   }
